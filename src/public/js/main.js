@@ -54,9 +54,7 @@ $(document).ready(function () {
 
         socket.on('player leave', function (data) {
             for (var i = 0; i < players.length; i++) {
-                console.log(i)
                 if (players[i].id == data.playerId) {
-                    console.log("found")
                     players.splice(i, 1);
                     break;
                 }
@@ -183,6 +181,15 @@ $(document).ready(function () {
         }
 
         function draw() {
+
+            socket.on('player leave', function (data) {
+            for (var i = 0; i < players.length; i++) {
+                if (players[i].id == data.playerId) {
+                    players.splice(i, 1);
+                    break;
+                }
+            }
+        });
 
             var canvRatio = {
                 x: canvas.width / expectedSize.width,
