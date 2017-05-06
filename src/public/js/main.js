@@ -203,10 +203,11 @@ $(document).ready(function () {
             }
 
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
-
+            
             for (var i = 0; i < players.length; i++) {
                 context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
+
             for (var i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
