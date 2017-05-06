@@ -9,16 +9,16 @@ function updatePhys(canvRatio) {
     for (var i = 0; i < players.length; i++) {
         players[i].physObj = new PhysObj(players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 20, 128, 128);
 
-        // gravity(players[i]);
-        // walkPhys(players[i]);
+        gravity(players[i], canvRatio);
+        walkPhys(players[i]);
     }
     
-    var myPlayer = players.find(function (el) {
-        return el.id == myPlayerId;
-    });
+    // var myPlayer = players.find(function (el) {
+    //     return el.id == myPlayerId;
+    // });
     
-    gravity(myPlayer, canvRatio);
-    walkPhys(myPlayer);
+    // gravity(myPlayer, canvRatio);
+    // walkPhys(myPlayer);
 
     
 
