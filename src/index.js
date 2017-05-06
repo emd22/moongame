@@ -51,7 +51,7 @@ io.on('connection', function (socket) {
       currentUsers.push(socket.player);
 
       socket.on('disconnect', function () {
-
+        console.log("player "+socket.player+" has disconnected");
         var index = currentUsers.indexOf(socket.player);
         if (index != -1) {
           socket.emit('player leave', {

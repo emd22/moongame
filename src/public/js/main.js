@@ -119,7 +119,7 @@ $(document).ready(function () {
         var player = new Entity("img/player_def.png", 4);
 
         var platform = new Entity("img/platform.png", 1);
-        var star11 = new Entity("img/star11.png", 2);
+        var star11 = new Entity("img/star11.png", 1);
 
         function loadImageSlice(entity, frameIncrement, splitWidth) {
             if (frameIncrement == undefined) {
@@ -190,7 +190,6 @@ $(document).ready(function () {
             updatePhys(canvRatio);
             // clear the screen.
             fillScreen('black');
-
 
             loadImageSlice(player);
 
