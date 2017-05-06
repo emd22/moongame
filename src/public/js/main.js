@@ -56,7 +56,6 @@ $(document).ready(function () {
             for (var i = 0; i < players.length; i++) {
                 if (players[i].id == data.playerId) {
                     players.splice(i, 0);
-                    break;
                 }
             }
         });
