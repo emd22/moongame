@@ -58,7 +58,7 @@ io.on('connection', function (socket) {
             playerId: currentUsers[index].id
           });
 
-          currentUsers.splice(0, index);
+          currentUsers.splice(index, 1);
         }
       });
 
