@@ -54,7 +54,9 @@ $(document).ready(function () {
 
         socket.on('player leave', function (data) {
             for (var i = 0; i < players.length; i++) {
+                console.log(i)
                 if (players[i].id == data.playerId) {
+                    console.log("found")
                     players.splice(i, 1);
                     break;
                 }
