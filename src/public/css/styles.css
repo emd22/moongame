@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+/* just for this demo. 
+  you can remove this when you get rid of the message. */
+#message {
+  text-align: center;
+}
+#message > h3 {
+  font-size: 30px;
+}
+#message > h3 > span {
+  font-size: 34px;
+  color: green;
+}

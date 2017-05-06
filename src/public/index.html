@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <canvas id="main-canvas" width="500" height="250"></canvas>
+    
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://192.168.2.11:8080');
+    </script>
+      
+    <script src="js/keypress.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
