@@ -259,9 +259,8 @@ $(document).ready(function () {
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
-            context.font = "50px Arial";
             var message = "x:"+mX.toString+" y:"+mY.toString;
-            context.fillText(message, 100, 100);
+            console.log(message)
 
             if (Math.floor(stars[rand].size) != 1) {
                 stars[rand].size  = orgSize;
