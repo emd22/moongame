@@ -181,47 +181,6 @@ $(document).ready(function () {
             keypress();
         }
 
-        function MobileButton(x, y, text) {
-            this.x = x;
-            this.y = y;
-            this.text = text;
-        }
-
-        var mobileButtons = [];
-
-        function mobileButtonCheck(event) {
-            var pX = event.pageX;
-            var pY = event.pageY;
-
-            var bX = canvas.width / expectedSize.width;
-            var bY = canvas.height / expectedSize.height;
-
-            mobileButtons = [new MobileButton(bX+100, bY+100, "Left"),
-                             new MobileButton(bX+500, bY+100, "Right")];
-
-            for (var i = 0; i < mobileButtons.length; i++) {
-                var mb = mobileButtons[i];
-
-                if (pX < mb.x + 128 &&
-                    pX + 1 > mb.x &&
-                    pY < mb.y + 128 &&
-                    1 + pY > mb.y) {
-
-                    if (mb.text == "Left") {
-                        moveL();
-                    }
-                    if (mb.text == "Right") {
-                        moveR();
-                    }
-                }
-
-                context.drawImage(button.image, button.frameIndex, 0, 64, 64, mb.x * bX, mb.y * bY, 128, 128);
-                context.font = "30px Arial";
-                context.fillStyle = "white";
-                context.fillText(mb.text, mb.x, mb.y);
-            }
-        }
-
         function draw() {
 
             var canvRatio = {
