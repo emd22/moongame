@@ -89,7 +89,7 @@ $(document).ready(function () {
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
 
-        canvas.addEventListener("ontouchstart", getPosition, false);
+        canvas.addEventListener("click", getPosition, false);
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -201,6 +201,9 @@ $(document).ready(function () {
 
             mX -= canvas.offsetLeft;
             mY -= canvas.offsetTop;
+
+            var message = "x:"+mX.toString()+" y:"+mY.toString();
+            console.log(message)
         }
 
         function updateMobile() {
@@ -258,9 +261,6 @@ $(document).ready(function () {
                 var chunk = chunks[i];
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
-
-            var message = "x:"+mX.toString()+" y:"+mY.toString();
-            console.log(message)
 
             if (Math.floor(stars[rand].size) != 1) {
                 stars[rand].size  = orgSize;
