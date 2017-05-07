@@ -209,10 +209,10 @@ $(document).ready(function () {
         function updateMobile() {
             if (isMobile) {
                 console.log("running mobile...")
-                if (mX < 100 + 128 &&
-                    mX + 1 > 128 &&
-                    mY < 100 + 128 &&
-                    1 + mY > 100) {
+                if (mX < canvas.width-canvas.width/2 + canvas.width/2  &&
+                    mX + 1 > canvas.width-canvas.width/2 &&
+                    mY < canvas.height/2 + canvas.width/2 &&
+                    1 + mY > canvas.height/2) {
                     
                     var myPlayer = players.find(function (el) {
                         return el.id == myPlayerId;
@@ -222,7 +222,7 @@ $(document).ready(function () {
                     mY = 0;
 
                     console.log("move via virtual buttons")
-                    myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
+                    myPlayer.setWalkVelocity(myPlayer.walkVelocity+10, true);
                 }
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 100, 100, 128, 128);
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 500, 100, 128, 128);
