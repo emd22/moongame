@@ -222,6 +222,7 @@ $(document).ready(function () {
         }
 
         function draw() {
+            updateMobile();
 
             var canvRatio = {
                 x: canvas.width / expectedSize.width,
