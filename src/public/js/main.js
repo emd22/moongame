@@ -205,10 +205,6 @@ $(document).ready(function () {
 
             mX -= canvas.offsetLeft;
             mY -= canvas.offsetTop;
-
-            context.font = "50px Arial";
-            var message = "x:"+mX.toString+" y:"+mY.toString;
-            context.fillText(message, 100, 100);
         }
 
         function updateMobile() {
@@ -266,6 +262,10 @@ $(document).ready(function () {
                 var chunk = chunks[i];
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
+
+            context.font = "50px Arial";
+            var message = "x:"+mX.toString+" y:"+mY.toString;
+            context.fillText(message, 100, 100);
 
             if (Math.floor(stars[rand].size) != 1) {
                 stars[rand].size  = orgSize;
