@@ -113,6 +113,11 @@ $(document).ready(function () {
             this.image;
         }
 
+        var canvRatio = {
+            x: canvas.width / expectedSize.width,
+            y: canvas.height / expectedSize.height
+        };
+
         var stars = [];
         var chunks = [];
 
@@ -203,8 +208,7 @@ $(document).ready(function () {
         }
 
         function draw() {
-
-            var canvRatio = {
+            canvRatio = {
                 x: canvas.width / expectedSize.width,
                 y: canvas.height / expectedSize.height
             };
