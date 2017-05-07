@@ -219,14 +219,14 @@ $(document).ready(function () {
                 var rWidth = canvas.width/2;
                 var rHeight = canvas.height/2;
 
+                var myPlayer = players.find(function (el) {
+                    return el.id == myPlayerId;
+                });
+
                 if (mX < lxStart + lWidth &&
                     mX + 1 > lxStart &&
                     mY < lyStart + lHeight &&
                     1 + mY > lHeight) {
-                    
-                    var myPlayer = players.find(function (el) {
-                        return el.id == myPlayerId;
-                    });
 
                     mX = 0;
                     mY = 0;
@@ -238,16 +238,12 @@ $(document).ready(function () {
                     mX + 1 > rxStart &&
                     mY < ryStart + rHeight &&
                     1 + mY > rHeight) {
-                    
-                    var myPlayer = players.find(function (el) {
-                        return el.id == myPlayerId;
-                    });
 
                     mX = 0;
                     mY = 0;
 
                     console.log("move via virtual buttons")
-                    myPlayer.setWalkVelocity(myPlayer.walkVelocity+10, true);
+                    myPlayer.setWalkVelocity(myPlayer.walkVelocity-10, true);
                 }
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 100, 100, 128, 128);
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 500, 100, 128, 128);
