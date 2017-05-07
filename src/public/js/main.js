@@ -223,7 +223,7 @@ $(document).ready(function () {
                     mY = 0;
 
                     console.log("move via virtual buttons")
-                    myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
+                    myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
                 }
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 100, 100, 128, 128);
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, 500, 100, 128, 128);
