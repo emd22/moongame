@@ -198,7 +198,7 @@ $(document).ready(function () {
             for (var i = 0; i < mobileButtons.length; i++) {
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * bX, mobileButtons[i].y * bY, 128, 128);
                 context.font = "30px Arial";
-                context.fillStyle("white");
+                context.fillStyle = "white";
                 context.fillText(mobileButtons[i].text, mobileButtons[i].x, mobileButtons[i].y);
             }
         }
