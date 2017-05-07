@@ -205,6 +205,10 @@ $(document).ready(function () {
 
             mX -= canvas.offsetLeft;
             mY -= canvas.offsetTop;
+
+            context.font = "50px Arial";
+            var message = "x:"+mX.toString+" y:"+mY.toString;
+            context.fillText(message, 100, 100);
         }
 
         function updateMobile() {
