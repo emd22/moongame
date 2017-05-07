@@ -102,7 +102,7 @@ document.addEventListener('keydown', function (event) {
         return el.id == myPlayerId;
     });
 
-    console.log('key = ', key);
+    //console.log('key = ', key);
     if (key == "w") {
         // y -= 100;
         myPlayer.move(myPlayer._x, myPlayer._y - 100, true);

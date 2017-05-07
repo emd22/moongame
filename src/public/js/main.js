@@ -89,6 +89,8 @@ $(document).ready(function () {
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
 
+        canvas.addEventListener("mousedown", getPosition, false);
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -179,6 +181,36 @@ $(document).ready(function () {
 
         function update() {
             keypress();
+        }
+
+        var isMobile;
+
+        function checkMobile() {
+            if ($(window).width() <= 766) {
+                isMobile = true;
+            }
+            else {
+                isMobile = false;
+            }
+        }
+
+        function getPosition(event) {
+            var x = event.x;
+            var y = event.y;
+
+            var canvas = document.getElementById("canvas");
+
+            x -= canvas.offsetLeft;
+            y -= canvas.offsetTop;
+
+            console.log("x:" + x + " y:" + y);
+        }
+
+        function updateMobile() {
+            if (isMobile) {
+                context.drawImage(button.image, 0, 0, 64, 64, 100, 100, 128, 128);
+                context.drawImage(button.image, 0, 0, 64, 64, 500, 100, 128, 128);
+            }
         }
 
         function draw() {
