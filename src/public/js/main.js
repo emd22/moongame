@@ -215,10 +215,11 @@ $(document).ready(function () {
                     mY < 100 + 128 &&
                     1 + mY > 100) {
 
+                    console.log("move via virtual buttons")
                     x++;
                 }
-                context.drawImage(button.image, 0, 0, 64, 64, 100, 100, 128, 128);
-                context.drawImage(button.image, 0, 0, 64, 64, 500, 100, 128, 128);
+                context.drawImage(button.image, button.frameIndex, 0, 64, 64, 100, 100, 128, 128);
+                context.drawImage(button.image, button.frameIndex, 0, 64, 64, 500, 100, 128, 128);
             }
         }
 
