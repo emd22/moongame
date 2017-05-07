@@ -122,27 +122,6 @@ $(document).ready(function () {
         var star11 = new Entity("img/star11.png", 1);
         var button = new Entity("img/button.png", 1);
 
-        function MobileButton(x, y, text) {
-            this.x = x;
-            this.y = y;
-            this.text = text;
-        }
-
-        var mobileButtons = [];
-
-        function mobileButtonCheck() {
-            var bX = canvas.width / expectedSize.width;
-            var bY = canvas.height / expectedSize.height;
-            mobileButtons = [new MobileButton(bX+100, bY-300, "Left"),
-                             new MobileButton(100, bY-300, "Right")];
-
-            for (var i = 0; i < mobileButtons.length; i++) {
-                context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * canvRatio.x, mobileButtons[i].y * canvRatio.y, 128, 128);
-                context.font = "30px Arial";
-                context.fillText(mobileButtons[i].text, mobileButtons[i].x, mobileButtons[i].y);
-            }
-        }
-
         function loadImageSlice(entity, frameIncrement, splitWidth) {
             if (frameIncrement == undefined) {
                 frameIncrement = 0.2;
@@ -200,6 +179,27 @@ $(document).ready(function () {
 
         function update() {
             keypress();
+        }
+
+        function MobileButton(x, y, text) {
+            this.x = x;
+            this.y = y;
+            this.text = text;
+        }
+
+        var mobileButtons = [];
+
+        function mobileButtonCheck() {
+            var bX = canvas.width / expectedSize.width;
+            var bY = canvas.height / expectedSize.height;
+            mobileButtons = [new MobileButton(bX+100, bY-300, "Left"),
+                             new MobileButton(100, bY-300, "Right")];
+
+            for (var i = 0; i < mobileButtons.length; i++) {
+                context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * canvRatio.x, mobileButtons[i].y * canvRatio.y, 128, 128);
+                context.font = "30px Arial";
+                context.fillText(mobileButtons[i].text, mobileButtons[i].x, mobileButtons[i].y);
+            }
         }
 
         function draw() {
