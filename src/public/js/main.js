@@ -199,7 +199,7 @@ $(document).ready(function () {
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * bX, mobileButtons[i].y * bY, 128, 128);
                 context.font = "30px Arial";
                 context.fillStyle = "white";
-                context.fillText(mobileButtons[i].text, mobileButtons[i].x-150, mobileButtons[i].y-150);
+                context.fillText(mobileButtons[i].text, mobileButtons[i].x+25, mobileButtons[i].y+25);
             }
         }
 
