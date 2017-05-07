@@ -214,6 +214,10 @@ $(document).ready(function () {
                     mX + 1 > 128 &&
                     mY < 100 + 128 &&
                     1 + mY > 100) {
+                    
+                    var myPlayer = players.find(function (el) {
+                        return el.id == myPlayerId;
+                    });
 
                     mX = 0;
                     mY = 0;
