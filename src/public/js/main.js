@@ -194,18 +194,28 @@ $(document).ready(function () {
             }
         }
 
+        checkMobile();
+
         function getPosition(event) {
-            var x = event.x;
-            var y = event.y;
+            var mX = event.x;
+            var mY = event.y;
 
-            x -= canvas.offsetLeft;
-            y -= canvas.offsetTop;
+            mX -= canvas.offsetLeft;
+            mY -= canvas.offsetTop;
 
-            console.log("x:" + x + " y:" + y);
+            return [mX, mY];
         }
 
         function updateMobile() {
             if (isMobile) {
+                console.log("running mobile...")
+                if (mX < 100 + 128 &&
+                    mX + 1 > 128 &&
+                    mY < 100 + 128 &&
+                    1 + mY > 100) {
+
+                    player.move(oldx+1, oldy-7, true);
+                }
                 context.drawImage(button.image, 0, 0, 64, 64, 100, 100, 128, 128);
                 context.drawImage(button.image, 0, 0, 64, 64, 500, 100, 128, 128);
             }
