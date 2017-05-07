@@ -196,14 +196,15 @@ $(document).ready(function () {
 
         checkMobile();
 
+        var mX = 0;
+        var mY = 0;
+
         function getPosition(event) {
-            var mX = event.x;
-            var mY = event.y;
+            mX = event.x;
+            mY = event.y;
 
             mX -= canvas.offsetLeft;
             mY -= canvas.offsetTop;
-
-            return [mX, mY];
         }
 
         function updateMobile() {
