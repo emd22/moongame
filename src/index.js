@@ -52,18 +52,20 @@ io.on('connection', function (socket) {
 
       socket.on('disconnect', function () {
         console.log("player "+socket.player+" has disconnected");
-        var index = currentUsers.indexOf(socket.player);
-        if (index != -1) {
-          socket.emit('player leave', {
-            playerId: currentUsers[index].id
-          });
 
-          currentUsers.splice(index, 1);
+        for (var i = 0; i < currentUsers.length; i++) {
+          if (currentUsers[i].id == socket.id) {
+            currentUsers.splice(i, 1);
+          }
         }
+
+        socket.broadcast.emit('player leave', {
+          playerId: socket.id
+        });
       });
 
       socket.on('move player', function (data) {
-          console.log("Got player move:", data);
+          //console.log("Got player move:", data);
 
           socket.player.x = data.x;
           socket.player.y = data.y;
@@ -75,7 +77,7 @@ io.on('connection', function (socket) {
           });
       });
       socket.on('set walk velocity', function (data) {
-          console.log('Set player walk velocity:', data);
+          //console.log('Set player walk velocity:', data);
 
           socket.player.walkVelocity = data.walkVelocity;
 
