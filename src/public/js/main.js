@@ -192,7 +192,7 @@ $(document).ready(function () {
         function mobileButtonCheck() {
             var bX = canvas.width / expectedSize.width;
             var bY = canvas.height / expectedSize.height;
-            mobileButtons = [new MobileButton(bX+100, bY-300, "Left"),
+            mobileButtons = [new MobileButton(100, 100, "Left"),
                              new MobileButton(100, bY-300, "Right")];
 
             for (var i = 0; i < mobileButtons.length; i++) {
