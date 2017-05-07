@@ -234,6 +234,8 @@ $(document).ready(function () {
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
+            mobileButtonCheck();
+
             if (Math.floor(stars[rand].size) != 1) {
                 stars[rand].size  = orgSize;
                 rand = Math.floor(Math.random() * (stars.length));
