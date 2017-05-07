@@ -192,8 +192,8 @@ $(document).ready(function () {
         function mobileButtonCheck() {
             var bX = canvas.width / expectedSize.width;
             var bY = canvas.height / expectedSize.height;
-            mobileButtons = [new MobileButton(100, 100, "Left"),
-                             new MobileButton(100, bY-300, "Right")];
+            mobileButtons = [new MobileButton(bX+100, bY+100, "Left"),
+                             new MobileButton(bX+500, bY+100, "Right")];
 
             for (var i = 0; i < mobileButtons.length; i++) {
                 context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * bX, mobileButtons[i].y * bY, 128, 128);
