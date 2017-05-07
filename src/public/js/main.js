@@ -189,9 +189,9 @@ $(document).ready(function () {
 
         var mobileButtons = [];
 
-        function mobileButtonCheck() {
-            var pX = context.pageX;
-            var pY = context.pageY;
+        function mobileButtonCheck(event) {
+            var pX = event.pageX;
+            var pY = event.pageY;
 
             var bX = canvas.width / expectedSize.width;
             var bY = canvas.height / expectedSize.height;
