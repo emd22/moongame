@@ -89,7 +89,7 @@ $(document).ready(function () {
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
 
-        canvas.addEventListener("mousedown", getPosition, false);
+        canvas.addEventListener("ontouchstart", getPosition, false);
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
