@@ -89,10 +89,6 @@ $(document).ready(function () {
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
 
-        canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
-        canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
-        window.addEventListener('mouseup', sketchpad_mouseUp, false);
-
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
