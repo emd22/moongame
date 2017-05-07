@@ -190,16 +190,35 @@ $(document).ready(function () {
         var mobileButtons = [];
 
         function mobileButtonCheck() {
+            var pX = context.pageX;
+            var pY = context.pageY;
+
             var bX = canvas.width / expectedSize.width;
             var bY = canvas.height / expectedSize.height;
+
             mobileButtons = [new MobileButton(bX+100, bY+100, "Left"),
                              new MobileButton(bX+500, bY+100, "Right")];
 
             for (var i = 0; i < mobileButtons.length; i++) {
-                context.drawImage(button.image, button.frameIndex, 0, 64, 64, mobileButtons[i].x * bX, mobileButtons[i].y * bY, 128, 128);
+                var mb = mobileButtons[i];
+
+                if (pX < mb.x + 128 &&
+                    pX + 1 > mb.x &&
+                    pY < mb.y + 128 &&
+                    1 + pY > mb.y) {
+
+                    if (mb.text == "Left") {
+                        moveL();
+                    }
+                    if (mb.text == "Right") {
+                        moveR();
+                    }
+                }
+
+                context.drawImage(button.image, button.frameIndex, 0, 64, 64, mb.x * bX, mb.y * bY, 128, 128);
                 context.font = "30px Arial";
                 context.fillStyle = "white";
-                context.fillText(mobileButtons[i].text, mobileButtons[i].x, mobileButtons[i].y);
+                context.fillText(mb.text, mb.x, mb.y);
             }
         }
 

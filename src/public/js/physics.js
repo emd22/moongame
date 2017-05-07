@@ -81,6 +81,19 @@ function gravity(player, canvRatio) {
 //var jumpVelocity = 0;
 //var keyCount = 0;
 
+function moveL() {
+    if (myPlayer.walkVelocity > -5) {
+        // myPlayer.walkVelocity -= 1;
+        myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
+    }
+}
+function moveR() {
+    if (myPlayer.walkVelocity < 5) {
+        // myPlayer.walkVelocity += 1;
+        myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
+    }
+}
+
 document.addEventListener('keydown', function (event) {
     var key = String.fromCharCode(event.keyCode).toLowerCase();
 
@@ -99,10 +112,7 @@ document.addEventListener('keydown', function (event) {
         //     walkVelocity--;
         // }
 
-        if (myPlayer.walkVelocity > -5) {
-            // myPlayer.walkVelocity -= 1;
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
-        }
+        moveL();
 
         key = 0;
     }
@@ -110,10 +120,9 @@ document.addEventListener('keydown', function (event) {
         // if (walkVelocity < 5) {
         //     walkVelocity++;
         // }
-        if (myPlayer.walkVelocity < 5) {
-            // myPlayer.walkVelocity += 1;
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
-        }
+
+        moveR();
+        
         key = 0;
     }
     else {
