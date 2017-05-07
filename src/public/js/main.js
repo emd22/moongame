@@ -78,6 +78,15 @@ $(document).ready(function () {
                 }
             }
         });
+
+        socket.on('set gravity velocity', function (data) {
+            for (var i = 0; i < players.length; i++) {
+                if (players[i].id == data.playerId) {
+                    players[i].setGravityVelocity(data.gravityVelocity, false);
+                    break;
+                }
+            }
+        });
     }
 
     join(Math.random().toString());
@@ -85,20 +94,16 @@ $(document).ready(function () {
     function afterJoined() {
         // NOTE: we use [0] to get the native JavaScript object,
         // rather than the jQuery object.
-        var canvas = $('#main-canvas')[0];
+        var $canvas = $('#main-canvas');
+        var canvas = $canvas[0];
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
 
-        canvas.addEventListener("click", function (event) {
-            mX = event.x;
-            mY = event.y;
-
-            mX -= canvas.offsetLeft;
-            mY -= canvas.offsetTop;
-
-            var message = "x:"+mX.toString()+" y:"+mY.toString();
-            console.log(message)
-        }, false);
+        $canvas.on('touchmove', function mouseState(e) {
+            var touch = event.targetTouches[0];
+            mX = touch.pageX;
+            mY = touch.pageY;
+        });
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;

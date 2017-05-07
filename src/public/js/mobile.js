@@ -24,8 +24,6 @@ function updateMobile(canvas) {
             return el.id == myPlayerId;
         });
 
-
-
         if (mX < lxStart + Width &&
             mX + 1 > lxStart &&
             mY < yStart + Height &&
@@ -34,7 +32,7 @@ function updateMobile(canvas) {
             mX = 0;
             mY = 0;
 
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity+5, true);
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
         }
         else if (mX < rxStart + Width &&
                 mX + 1 > rxStart &&
@@ -44,7 +42,7 @@ function updateMobile(canvas) {
             mX = 0;
             mY = 0;
 
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity-5, true);
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
         }
         
     }

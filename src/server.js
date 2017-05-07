@@ -15,12 +15,13 @@ app.get('/', function (req, res) {
 });
 
 
-function PlayerInfo(id, name, x, y, walkVelocity) {
+function PlayerInfo(id, name, x, y, walkVelocity, gravityVelocity) {
     this.id = id;
     this.name = name;
     this.x = x;
     this.y = y;
     this.walkVelocity = walkVelocity;
+    this.gravityVelocity = gravityVelocity;
 }
 
 var currentUsers = [];
@@ -39,7 +40,7 @@ io.on('connection', function (socket) {
     if (data.name == undefined) {
       socket.emit('error', { message: 'Name not entered' });
     } else {
-      socket.player = new PlayerInfo(socket.id, data.name, 0, 0, 0);
+      socket.player = new PlayerInfo(socket.id, data.name, 0, 0, 0, 0);
 
       socket.emit('join success', {
         player: socket.player,
@@ -82,11 +83,20 @@ io.on('connection', function (socket) {
           socket.player.walkVelocity = data.walkVelocity;
 
           socket.broadcast.emit('set walk velocity', {
-              playerId: socket.player.id,
-              name: socket.player.name,
-              walkVelocity: data.walkVelocity
+            playerId: socket.player.id,
+            name: socket.player.name,
+            walkVelocity: data.walkVelocity
           });
       });
+      socket.on('set gravity velocity', function (data) {
+        socket.player.gravityVelocity = data.gravityVelocity;
+
+        socket.broadcast.emit('set gravity velocity', {
+          playerId: socket.player.id,
+          name: socket.player.name,
+          gravityVelocity: data.gravityVelocity
+        })
+      }) 
     }
   });
 });

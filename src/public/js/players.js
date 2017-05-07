@@ -2,9 +2,12 @@ function Player(id, physObj) {
     this.id = id;
     this.physObj = physObj;
 
+    this.powerups = [];
     this._x = physObj.x;
     this._y = physObj.y;
     this.walkVelocity = 0;
+    this.gravityVelocity = 0;
+    this.jumpCooldown = 0;
 }
 
 Player.prototype.move = function (x, y, sendToServer) {
@@ -25,6 +28,16 @@ Player.prototype.setWalkVelocity = function (newWalkVelocity, sendToServer) {
     if (sendToServer) {
         socket.emit('set walk velocity', {
             walkVelocity: newWalkVelocity
+        });
+    }
+}
+
+Player.prototype.setGravityVelocity = function (newGravityVelocity, sendToServer) {
+    this.gravityVelocity = newGravityVelocity;
+
+    if (sendToServer) {
+        socket.emit('set gravity velocity', {
+            gravityVelocity: newGravityVelocity
         });
     }
 }
