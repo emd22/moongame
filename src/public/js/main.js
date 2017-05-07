@@ -259,7 +259,7 @@ $(document).ready(function () {
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
-            var message = "x:"+mX.toString+" y:"+mY.toString;
+            var message = "x:"+mX.toString()+" y:"+mY.toString();
             console.log(message)
 
             if (Math.floor(stars[rand].size) != 1) {
