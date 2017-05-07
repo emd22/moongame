@@ -214,10 +214,30 @@ $(document).ready(function () {
                 var lWidth = canvas.width/2;
                 var lHeight = canvas.height/2;
 
+                var rxStart = canvas.width/2;
+                var ryStart = canvas.height/2;
+                var rWidth = canvas.width/2;
+                var rHeight = canvas.height/2;
+
                 if (mX < lxStart + lWidth &&
                     mX + 1 > lxStart &&
                     mY < lyStart + lHeight &&
                     1 + mY > lHeight) {
+                    
+                    var myPlayer = players.find(function (el) {
+                        return el.id == myPlayerId;
+                    });
+
+                    mX = 0;
+                    mY = 0;
+
+                    console.log("move via virtual buttons")
+                    myPlayer.setWalkVelocity(myPlayer.walkVelocity+10, true);
+                }
+                else if (mX < rxStart + rWidth &&
+                    mX + 1 > rxStart &&
+                    mY < ryStart + rHeight &&
+                    1 + mY > rHeight) {
                     
                     var myPlayer = players.find(function (el) {
                         return el.id == myPlayerId;
