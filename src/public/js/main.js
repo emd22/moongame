@@ -209,10 +209,15 @@ $(document).ready(function () {
         function updateMobile() {
             if (isMobile) {
                 console.log("running mobile...")
-                if (mX < canvas.width-canvas.width/2 + canvas.width/2  &&
-                    mX + 1 > canvas.width-canvas.width/2 &&
-                    mY < canvas.height/2 + canvas.width/2 &&
-                    1 + mY > canvas.height/2) {
+                var lxStart = canvas.width-canvas.width/2;
+                var lyStart = canvas.height/2;
+                var lWidth = canvas.width/2;
+                var lHeight = canvas.height/2;
+
+                if (mX < lxStart + lWidth &&
+                    mX + 1 > lxStart &&
+                    mY < lyStart + lHeight &&
+                    1 + mY > lHeight) {
                     
                     var myPlayer = players.find(function (el) {
                         return el.id == myPlayerId;
