@@ -6,8 +6,8 @@ function checkMobile() {
 
 checkMobile();
 
-var mX = 0;
-var mY = 0;
+var mX = -1;
+var mY = -1;
 
 function updateMobile(canvas) {
     if (isMobile) {
@@ -18,40 +18,18 @@ function updateMobile(canvas) {
 
         var rxStart = 0;
 
-        var tyStart = 0;
-
         var myPlayer = players.find(function (el) {
             return el.id == myPlayerId;
         });
 
-        if (mX < lxStart + Width &&
-            mX + 1 > lxStart &&
-            mY < yStart + Height &&
-            1 + mY > Height) {
+        if (mX < 0 + canvas.width &&
+            mX + 1 > 0 &&
+            mY < 0 + canvas.height/2 &&
+            1 + mY > 0) {
 
-            mX = 0;
-            mY = 0;
-
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
-        }
-        else if (mX < rxStart + Width &&
-                mX + 1 > rxStart &&
-                mY < yStart + Height &&
-                1 + mY > Height) {
-
-            mX = 0;
-            mY = 0;
-
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
-        }
-
-        else if (mX < 0 + canvas.width &&
-                mX + 1 > 0 &&
-                mY < 0 + canvas.height/2 &&
-                1 + mY > canvas.height/2) {
-
-            mX = 0;
-            mY = 0;
+            mX = -1;
+            mY = -1;
+            console.log("jump")
 
             if (findPowerup(myPlayer, "Jetpack") != -1) {
                 myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 0.5, true);
@@ -63,5 +41,28 @@ function updateMobile(canvas) {
                 }
             }
         }
+
+        if (mX < lxStart + Width &&
+            mX + 1 > lxStart &&
+            mY < yStart + Height &&
+            1 + mY > Height) {
+
+            mX = -1;
+            mY = -1;
+
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity+1, true);
+        }
+        else if (mX < rxStart + Width &&
+                mX + 1 > rxStart &&
+                mY < yStart + Height &&
+                1 + mY > Height) {
+
+            mX = -1;
+            mY = -1;
+
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
+        }
+
+        
     }
 }
