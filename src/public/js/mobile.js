@@ -44,6 +44,24 @@ function updateMobile(canvas) {
 
             myPlayer.setWalkVelocity(myPlayer.walkVelocity-1, true);
         }
-        
+
+        else if (mX < 0 + canvas.width &&
+                mX + 1 > 0 &&
+                mY < 0 + canvas.height/2 &&
+                1 + mY > canvas.height/2) {
+
+            mX = 0;
+            mY = 0;
+
+            if (findPowerup(myPlayer, "Jetpack") != -1) {
+                myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 0.5, true);
+            }
+            else {
+                if (myPlayer.jumpCooldown <= 0) {
+                    myPlayer.jumpCooldown = 35;
+                    myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 7, true);
+                }
+            }
+        }
     }
 }
