@@ -7,6 +7,18 @@
   </head>
   <body>
     <canvas id="main-canvas" width="500" height="250"></canvas>
+    <button id="open-button">Chat ;)</button>
+    <div id="main-sidebar">
+      <div class="wrapper">
+        <a id="sidebar-close">
+          Close
+        </a>
+        <h3>Chat</h3>
+        <div id="messages">
+        </div>
+        <input id="message-input">
+      </div>
+    </div>
     <script
       src="https://code.jquery.com/jquery-3.1.1.min.js"
       integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -14,9 +26,9 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://ethanmakescode.com');
+      var socket = io.connect('http://ethanmakescode.com'); //192.168.2.11:8080
     </script>
-      
+
     <script src="js/keypress.js"></script>
     <script src="js/item.js"></script>
     <script src="js/mobile.js"></script>

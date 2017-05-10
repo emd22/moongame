@@ -21,3 +21,37 @@ canvas {
   font-size: 34px;
   color: green;
 }
+
+#sidebar-close {
+  float: right;
+  color: #fff;
+  font-size: 16px;
+  line-height: 26px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+#main-sidebar {
+  position: absolute;
+  height: 100%;
+  width: 250px;
+  background-color: rgba(0,0,0,0.95);
+  transition: width 0.5s ease;
+  overflow: hidden;
+}
+#main-sidebar h3 {
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+}
+#main-sidebar .wrapper {
+  position: absolute;
+  width: 245px;
+  height: 100%;
+  border-right: 5px solid #eee;
+}
+
+#open-button {
+  position: absolute;
+}

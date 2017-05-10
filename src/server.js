@@ -3,6 +3,10 @@ var app = express();
 var path = require('path');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var mongoose = require('mongoose');
+var Message = require('./models/message.js').Message;
+
+mongoose.connect('mongodb://localhost/moongame');
 
 server.listen(8080);
 
@@ -13,7 +17,6 @@ app.use('/img', express.static(path.join(__dirname, 'public/img')));
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
-
 
 function PlayerInfo(id, name, x, y, walkVelocity, gravityVelocity) {
     this.id = id;
@@ -28,9 +31,6 @@ var currentUsers = [];
 
 io.on('connection', function (socket) {
   console.log('New Connection');
-  socket.emit('welcome', {
-    motd: "Welcome to the first multiplayer beta!"
-  });
 
   socket.on('player join', function (data) {
     if (data == undefined) {
@@ -42,11 +42,16 @@ io.on('connection', function (socket) {
     } else {
       socket.player = new PlayerInfo(socket.id, data.name, 0, 0, 0, 0);
 
-      socket.emit('join success', {
-        player: socket.player,
-        otherPlayers: currentUsers
-      });
+      Message.find({}).then(function (messages) {
+        socket.emit('join success', {
+          player: socket.player,
+          otherPlayers: currentUsers,
+          messages: messages
+        });
 
+      }).catch(function (err) {
+        console.error("ERROR LOADING MESSAGES ", err);
+      });
       socket.broadcast.emit('player join', { player: socket.player });
 
       currentUsers.push(socket.player);
@@ -64,6 +69,21 @@ io.on('connection', function (socket) {
           playerId: socket.id
         });
       });
+
+      socket.on('player send message', function (data) {
+        io.sockets.emit('message sent', {
+          playerId: socket.id,
+          message: data.message
+        });
+        new Message({
+          message: data.message,
+          sender: socket.id
+        }).save().then(function(message) {
+          console.log("MESSAGE SAVE SUCCESSFULLY");
+        }).catch(function (err) {
+          console.error("ERROR SAVING MESSAGE: ", err);
+        });
+      })
 
       socket.on('move player', function (data) {
           //console.log("Got player move:", data);

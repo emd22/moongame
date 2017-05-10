@@ -12,7 +12,7 @@ function updatePhys(canvRatio) {
     }
 }
 
-function PhysObj(x, y, mass, width, height) {
+function PhysObj(x, y, mass, width, height, nocollide) {
     this.x = x;
     this.y = y;
 
@@ -30,6 +30,10 @@ function gravity(player, canvRatio) {
     player.jumpCooldown--;
     for (var i = 0; i < physicsObjects.length; i++) {
         var obj = physicsObjects[i];
+
+        if (obj.nocollide) {
+            return;
+        }
 
         var objFixed = {
             x: obj.x * canvRatio.x,
@@ -73,11 +77,12 @@ document.addEventListener('keydown', function (event) {
         //myPlayer.move(myPlayer._x, myPlayer._y - 100, true);
         if (findPowerup(myPlayer, "Jetpack") != -1) {
             myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 0.5, true);
+            lowerCapacity(myPlayer, "Jetpack", 15);
         }
         else {
             if (myPlayer.jumpCooldown <= 0) {
                 myPlayer.jumpCooldown = 35;
-                myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 7, true);
+                myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 5.4, true);
             }
         }
     }
@@ -86,13 +91,24 @@ document.addEventListener('keydown', function (event) {
         myPlayer.setGravityVelocity(myPlayer.gravityVelocity + 0.7, true);
     }
     if (key == "a") {
+        var moveSpeed = 1;
+        if (findPowerup(myPlayer, "Super Speed") != -1) {
+            moveSpeed = 5;
+            lowerCapacity(myPlayer, "Super Speed", 5);
+        }
         if (myPlayer.walkVelocity > -5) {
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity - 1, true);
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity - moveSpeed, true);
         }
     }
     else if (key == "d") {
+        var moveSpeed = 1;
+        if (findPowerup(myPlayer, "Super Speed") != -1) {
+            moveSpeed = 5;
+            lowerCapacity(myPlayer, "Super Speed", 5);
+        }
+
         if (myPlayer.walkVelocity < 5) {
-            myPlayer.setWalkVelocity(myPlayer.walkVelocity + 1, true);
+            myPlayer.setWalkVelocity(myPlayer.walkVelocity + moveSpeed, true);
         }
     }
 });

@@ -4,6 +4,23 @@ var expectedSize = {
 };
 
 $(document).ready(function () {
+    $('#sidebar-close').click(function () {
+        $('#main-sidebar').css('width', '0px');
+        //$('#main-sidebar .wrapper').hide();
+    });
+    $('#open-button').click(function () {
+        $('#main-sidebar').css('width', '245px');
+    });
+
+    $('#message-input').keypress(function (event) {
+        if (event.keyCode == 13) {
+            socket.emit('player send message', {
+                message: $(this).val()
+            });
+            $('#message-input').val("");
+        }
+    })
+
     function join(name) {
         socket.emit('player join', {
             name: name
@@ -11,6 +28,11 @@ $(document).ready(function () {
 
         socket.on('error', function (data) {
             alert('Error! ' + data.message);
+        });
+
+        socket.on('message sent', function (data) {
+            $('#messages').append('<h5 style="color: #fff; margin: 0">'+data.message+'</h5>');
+            console.log(data);
         });
 
         socket.on('join success', function (data) {
@@ -25,6 +47,10 @@ $(document).ready(function () {
             // add other players
             data.otherPlayers.forEach(function (player) {
                 players.push(new Player(player.id, new PhysObj(player.x, player.y, 20, 128, 128)));
+            });
+
+            data.messages.forEach(function (message) {
+                $('#messages').append('<h5 style="color: #fff; margin: 0">'+'&lt;Message&gt; '+message.message+'</h5>');
             });
 
             setInterval(function() {
@@ -92,6 +118,8 @@ $(document).ready(function () {
     join(Math.random().toString());
 
     function afterJoined() {
+        
+
         // NOTE: we use [0] to get the native JavaScript object,
         // rather than the jQuery object.
         var $canvas = $('#main-canvas');
@@ -174,6 +202,7 @@ $(document).ready(function () {
                 chunks.push(chunk);
             }
         }
+
         function fillStars() {
             for (var i = 0; i < 250; i++) {
                 var star = new Star();
