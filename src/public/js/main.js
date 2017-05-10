@@ -3,6 +3,25 @@ var expectedSize = {
     height: 580
 };
 
+
+
+function escapeHtml (string) {
+    var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    };
+
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
 $(document).ready(function () {
     $('#sidebar-close').click(function () {
         $('#main-sidebar').css('width', '0px');
@@ -31,7 +50,7 @@ $(document).ready(function () {
         });
 
         socket.on('message sent', function (data) {
-            $('#messages').append('<h5 style="color: #fff; margin: 0">'+data.message+'</h5>');
+            $('#messages').append('<h5 style="color: #fff; margin: 0">'+escapeHtml(data.message)+'</h5>');
             console.log(data);
         });
 
@@ -50,7 +69,7 @@ $(document).ready(function () {
             });
 
             data.messages.forEach(function (message) {
-                $('#messages').append('<h5 style="color: #fff; margin: 0">'+'&lt;Message&gt; '+message.message+'</h5>');
+                $('#messages').append('<h5 style="color: #fff; margin: 0">'+escapeHtml(message.message)+'</h5>');
             });
 
             setInterval(function() {
