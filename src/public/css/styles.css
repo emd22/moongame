@@ -22,6 +22,17 @@ canvas {
   color: green;
 }
 
+#messages {
+  color: #fff;
+  margin: 0;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+#messages > h5 {
+  margin: 0;
+}
+
 #sidebar-close {
   float: right;
   color: #fff;

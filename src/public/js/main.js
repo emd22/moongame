@@ -31,12 +31,16 @@ $(document).ready(function () {
         $('#main-sidebar').css('width', '245px');
     });
 
-    $('#message-input').keypress(function (event) {
+    var $messageinput = $('#message-input');
+    var $messages = $('#messages');
+
+    $messageinput.keypress(function (event) {
         if (event.keyCode == 13) {
             socket.emit('player send message', {
                 message: $(this).val()
             });
-            $('#message-input').val("");
+            
+            $messageinput.val("");
         }
     })
 
@@ -50,8 +54,9 @@ $(document).ready(function () {
         });
 
         socket.on('message sent', function (data) {
-            $('#messages').append('<h5 style="color: #fff; margin: 0">'+escapeHtml(data.message)+'</h5>');
+            $('#messages').append('<h5>'+escapeHtml(data.message)+'</h5>');
             console.log(data);
+            $messages.scrollTop($messages[0].scrollHeight);
         });
 
         socket.on('join success', function (data) {
@@ -69,7 +74,7 @@ $(document).ready(function () {
             });
 
             data.messages.forEach(function (message) {
-                $('#messages').append('<h5 style="color: #fff; margin: 0">'+escapeHtml(message.message)+'</h5>');
+                $('#messages').append('<h5>'+escapeHtml(message.message)+'</h5>');
             });
 
             setInterval(function() {
