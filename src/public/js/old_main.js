@@ -3,7 +3,7 @@ var expectedSize = {
     height: 580
 };
 
-function escapeHtml(string) {
+function escapeHtml (string) {
     var entityMap = {
         '&': '&amp;',
         '<': '&lt;',
@@ -37,7 +37,7 @@ $(document).ready(function () {
             socket.emit('player send message', {
                 message: $(this).val()
             });
-
+            
             $messageinput.val("");
         }
     })
@@ -52,7 +52,7 @@ $(document).ready(function () {
         });
 
         socket.on('message sent', function (data) {
-            $('#messages').append('<h5>' + escapeHtml(data.message) + '</h5>');
+            $('#messages').append('<h5>'+escapeHtml(data.message)+'</h5>');
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
         });
@@ -72,10 +72,10 @@ $(document).ready(function () {
             });
 
             data.messages.forEach(function (message) {
-                $('#messages').append('<h5>' + escapeHtml(message.message) + '</h5>');
+                $('#messages').append('<h5>'+escapeHtml(message.message)+'</h5>');
             });
 
-            setInterval(function () {
+            setInterval(function() {
                 socket.emit('move player', {
                     x: myPlayer._x,
                     y: myPlayer._y
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
         socket.on('player join', function (data) {
             var found = false;
-
+            
             for (var i = 0; i < players.length; i++) {
                 if (players[i].id == data.player.id) {
                     found = true;
@@ -162,14 +162,13 @@ $(document).ready(function () {
         $(window).resize(resizeCanvas);
         resizeCanvas();
 
-        function Entity(imageSrc, amtFrames, amtFramesY) {
+        function Entity(imageSrc, amtFrames, frameIndexY) {
             this.image = new Image();
             this.image.src = imageSrc;
             this.frameNum = 0;
             this.frameIndex = 0;
-            this.frameIndexY = 0;
+            this.frameIndexY = frameIndexY;
             this.amtFrames = amtFrames;
-            this.amtFramesY = amtFramesY;
         }
 
         function Star(x, y) {
@@ -182,51 +181,40 @@ $(document).ready(function () {
         var stars = [];
         var chunks = [];
 
-        var player = new Entity("img/player_def.png", 4, 3);
+        var player = new Entity("img/player_def.png", 4);
 
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
         var button = new Entity("img/button.png", 1);
 
-        function drawSprite(entity, canvRatio, x, y, cutW, cutH, w, h) {
-            context.mozImageSmoothingEnabled = false;
-            context.webkitImageSmoothingEnabled = false;
-            context.msImageSmoothingEnabled = false;
-            context.imageSmoothingEnabled = false;
-
-            context.drawImage(entity.image,
-                entity.frameIndex,
-                entity.frameIndexY,
-                cutW,
-                cutH,
-                x * canvRatio.x,
-                y * canvRatio.y,
-                w * canvRatio.x,
-                h * canvRatio.y);
+        function loadSprite(entity, x, y, cutW, cutH, w, h) {
+            context.drawImage(entity.image, 
+                              entity.frameIndex,
+                              entity.frameIndexY, 
+                              cutW,
+                              cutH,
+                              entity.x * canvRatio.x,
+                              entity.y * canvRatio.y,
+                              w * canvRatio.x,
+                              h * canvRatio.y);
         }
 
         function loadImageSlice(entity, frameIncrement, frameIncrementY, splitWidth) {
             if (frameIncrement == undefined) {
                 frameIncrement = 0.2;
             }
-            if (frameIncrementY == undefined) {
-                frameIncrementY = 0.2;
-                2 + 5;
-            }
             if (splitWidth == undefined) {
                 splitWidth = 64;
             }
-
-            if (Math.floor(entity.frameNum) == entity.amtFrames) {
-                entity.frameNumY++;
-            }
+            context.mozImageSmoothingEnabled = false;
+            context.webkitImageSmoothingEnabled = false;
+            context.msImageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
 
             var sl = splitWidth * entity.amtFrames / entity.amtFrames * (Math.floor(entity.frameNum) % entity.amtFrames);
-            var slY = splitWidth * entity.amtFrames / entity.amtFrames * (Math.floor(entity.frameNumY) % entity.amtFramesY)
             entity.frameNum += frameIncrement;
             entity.frameIndex = sl;
-            entity.frameIndexY = slY;
-            return [sl, slY];
+            return sl;
         }
 
         function fillScreen(color) {
@@ -240,7 +228,7 @@ $(document).ready(function () {
             for (var i = 0; i < 8; i++) {
                 var chunk = new PhysObj();
                 chunk.x = i * 128;
-                chunk.y = expectedSize.height - 10;
+                chunk.y = expectedSize.height-10;
                 chunk.width = 64;
                 chunk.height = 10;
                 physicsObjects.push(chunk);
@@ -290,13 +278,11 @@ $(document).ready(function () {
             for (var i = 0; i < stars.length; i++) {
                 var star = stars[i];
 
-                drawSprite(star11, canvRatio, star.x, star.y, 1, 1, 2 * star.size, 2 * star.size);
-
-                //context.drawImage(star11.image, star11.frameIndex, 0, 1, 1, star.x * canvRatio.x, star.y * canvRatio.y, 2 * star.size, 2 * star.size);
+                context.drawImage(star11.image, star11.frameIndex, 0, 1, 1, star.x * canvRatio.x, star.y * canvRatio.y, 2 * star.size, 2 * star.size);
             }
 
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
-
+            
             for (var i = 0; i < players.length; i++) {
                 context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
@@ -307,7 +293,7 @@ $(document).ready(function () {
             }
 
             if (Math.floor(stars[rand].size) != 1) {
-                stars[rand].size = orgSize;
+                stars[rand].size  = orgSize;
                 rand = Math.floor(Math.random() * (stars.length));
                 orgSize = stars[rand].size;
             }
