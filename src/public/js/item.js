@@ -34,3 +34,23 @@ function Powerup(type, duration) {
     this.type = type;
     this.duration = duration;
 }
+
+var weaponList = [
+    new Weapon(new WeaponProps(0, 0), "None", "none.png"),
+    new Weapon(new WeaponProps(10, 8), "SG108", "shotgun.png")
+];
+
+var weapon_none = weaponList[0];
+var SG108 = weaponList[1];
+
+function WeaponProps(damage, magSize) {
+    this.damage = damage;
+    this.magSize = magSize;
+}
+
+function Weapon(weaponProps, name, imageSrc) {
+    this.weaponProps = weaponProps;
+    this.name = name;
+    this.image = new Image();
+    this.image.src = "img/weapons/"+imageSrc;
+}

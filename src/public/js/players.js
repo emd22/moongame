@@ -3,6 +3,9 @@ function Player(id, physObj) {
     this.physObj = physObj;
 
     this.powerups = [];
+    this.weapons = [SG108];
+    this.selectedWeapon = 0;
+
     this._x = physObj.x;
     this._y = physObj.y;
     this.walkVelocity = 0;

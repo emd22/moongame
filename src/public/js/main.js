@@ -162,14 +162,13 @@ $(document).ready(function () {
         $(window).resize(resizeCanvas);
         resizeCanvas();
 
-        function Entity(imageSrc, amtFrames, amtFramesY) {
+        function Entity(imageSrc, amtFrames, amtLines) {
             this.image = new Image();
             this.image.src = imageSrc;
             this.frameNum = 0;
             this.frameIndex = 0;
-            this.frameIndexY = 0;
             this.amtFrames = amtFrames;
-            this.amtFramesY = amtFramesY;
+            this.amtLines = amtLines;
         }
 
         function Star(x, y) {
@@ -182,51 +181,46 @@ $(document).ready(function () {
         var stars = [];
         var chunks = [];
 
-        var player = new Entity("img/player_def.png", 4, 3);
+        var playerHead = new Entity("img/player_def.png", 4);
+        var playerTorso = new Entity("img/player_def.png", 4);
+        var playerLegs = new Entity("img/player_def.png", 4);
 
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
-        var button = new Entity("img/button.png", 1);
 
-        function drawSprite(entity, canvRatio, x, y, cutW, cutH, w, h) {
+        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h, noXStretch) {
             context.mozImageSmoothingEnabled = false;
             context.webkitImageSmoothingEnabled = false;
             context.msImageSmoothingEnabled = false;
             context.imageSmoothingEnabled = false;
 
-            context.drawImage(entity.image,
+            //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
+
+            context.drawImage(
+                entity.image,
                 entity.frameIndex,
-                entity.frameIndexY,
+                yIndex * cutW,
                 cutW,
-                cutH,
+                cutW,
                 x * canvRatio.x,
                 y * canvRatio.y,
-                w * canvRatio.x,
-                h * canvRatio.y);
+                w * canvRatio.y,
+                h * canvRatio.y
+            );
         }
 
-        function loadImageSlice(entity, frameIncrement, frameIncrementY, splitWidth) {
+        function loadImageSlice(entity, frameIncrement, splitWidth) {
             if (frameIncrement == undefined) {
                 frameIncrement = 0.2;
-            }
-            if (frameIncrementY == undefined) {
-                frameIncrementY = 0.2;
-                2 + 5;
             }
             if (splitWidth == undefined) {
                 splitWidth = 64;
             }
 
-            if (Math.floor(entity.frameNum) == entity.amtFrames) {
-                entity.frameNumY++;
-            }
-
             var sl = splitWidth * entity.amtFrames / entity.amtFrames * (Math.floor(entity.frameNum) % entity.amtFrames);
-            var slY = splitWidth * entity.amtFrames / entity.amtFrames * (Math.floor(entity.frameNumY) % entity.amtFramesY)
             entity.frameNum += frameIncrement;
             entity.frameIndex = sl;
-            entity.frameIndexY = slY;
-            return [sl, slY];
+            return sl;
         }
 
         function fillScreen(color) {
@@ -283,14 +277,16 @@ $(document).ready(function () {
             // clear the screen.
             fillScreen('black');
 
-            loadImageSlice(player);
+            loadImageSlice(playerHead);
+            loadImageSlice(playerTorso);
+            loadImageSlice(playerLegs);
 
             stars[rand].size += 0.08;
 
             for (var i = 0; i < stars.length; i++) {
                 var star = stars[i];
 
-                drawSprite(star11, canvRatio, star.x, star.y, 1, 1, 2 * star.size, 2 * star.size);
+                drawSprite(star11, canvRatio, star.x, star.y, 1, 0, 2 * star.size, 2 * star.size);
 
                 //context.drawImage(star11.image, star11.frameIndex, 0, 1, 1, star.x * canvRatio.x, star.y * canvRatio.y, 2 * star.size, 2 * star.size);
             }
@@ -298,7 +294,12 @@ $(document).ready(function () {
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
 
             for (var i = 0; i < players.length; i++) {
-                context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
+                var weapon = players[0].weapons[players[0].selectedWeapon];
+                drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 0);
+                drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 0);
+                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x+25), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+                drawSprite(playerLegs, canvRatio, players[i]._x, players[i]._y, 64, 2, 128, 128, 0);
+                //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
 
             for (var i = 0; i < chunks.length; i++) {
