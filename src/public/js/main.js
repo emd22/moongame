@@ -32,6 +32,16 @@ $(document).ready(function () {
     var $messageinput = $('#message-input');
     var $messages = $('#messages');
 
+    function speak(text, player) {
+        window.speechSynthesis.cancel();
+        var message = new SpeechSynthesisUtterance();
+        message.text = text;
+        message.pitch = 0.3;
+        var voices = speechSynthesis.getVoices();
+        message.voice = player.voice;
+        window.speechSynthesis.speak(message);
+    }
+
     $messageinput.keypress(function (event) {
         if (event.keyCode == 13) {
             socket.emit('player send message', {
@@ -53,6 +63,10 @@ $(document).ready(function () {
 
         socket.on('message sent', function (data) {
             $('#messages').append('<h5>' + escapeHtml(data.message) + '</h5>');
+            var myPlayer = players.find(function (el) {
+                return el.id == myPlayerId;
+            });
+            speak(data.message, myPlayer);
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
         });
@@ -63,6 +77,8 @@ $(document).ready(function () {
             console.log('myPlayerId = ', myPlayerId);
 
             var myPlayer = new Player(data.player.id, new PhysObj(data.player.x, data.player.y, 20, 128, 128))
+
+            console.log(speechSynthesis.getVoices())
 
             players.push(myPlayer);
 
@@ -139,6 +155,13 @@ $(document).ready(function () {
 
     join(Math.random().toString());
 
+    function addVoices() {
+        var voices = window.speechSynthesis.getVoices();
+        for (var i = 0; i < players.length; i++) {
+            players[i].voice = voices[Math.floor(Math.random() * voices.length)];
+        }
+    }
+
     function afterJoined() {
         // NOTE: we use [0] to get the native JavaScript object,
         // rather than the jQuery object.
@@ -152,6 +175,11 @@ $(document).ready(function () {
             mX = touch.pageX;
             mY = touch.pageY;
         });
+
+        addVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = addVoices;
+        }
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
