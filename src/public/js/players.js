@@ -1,9 +1,10 @@
-function Player(id, physObj) {
+function Player(id, name, physObj) {
     this.id = id;
+    this.name  = name;
     this.physObj = physObj;
 
     this.powerups = [];
-    this.weapons = [SG108];
+    this.weapons = [weapon_sg108];
     this.selectedWeapon = 0;
 
     this._x = physObj.x;

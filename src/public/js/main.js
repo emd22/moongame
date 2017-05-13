@@ -32,13 +32,12 @@ $(document).ready(function () {
     var $messageinput = $('#message-input');
     var $messages = $('#messages');
 
+    var message = new SpeechSynthesisUtterance();
+
     function speak(text, player) {
-        window.speechSynthesis.cancel();
-        var message = new SpeechSynthesisUtterance();
+        window.speechSynthesis.cancel(); 
         message.text = text;
-        message.pitch = 0.3;
-        var voices = speechSynthesis.getVoices();
-        message.voice = player.voice;
+        message.voice = speechSynthesis.getVoices()[0];
         window.speechSynthesis.speak(message);
     }
 
@@ -53,6 +52,8 @@ $(document).ready(function () {
     })
 
     function join(name) {
+        $('#open-button').css('visibility', 'visible');
+
         socket.emit('player join', {
             name: name
         });
@@ -66,7 +67,10 @@ $(document).ready(function () {
             var myPlayer = players.find(function (el) {
                 return el.id == myPlayerId;
             });
-            speak(data.message, myPlayer);
+            var player = players.find(function (el) {
+                return el.id == data.playerId;
+            });
+            speak(player.name+" said "+data.message, myPlayer);
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
         });
@@ -76,7 +80,9 @@ $(document).ready(function () {
             myPlayerId = data.player.id;
             console.log('myPlayerId = ', myPlayerId);
 
-            var myPlayer = new Player(data.player.id, new PhysObj(data.player.x, data.player.y, 20, 128, 128))
+            var myPlayer = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128))
+
+            myPlayer.name = name;
 
             console.log(speechSynthesis.getVoices())
 
@@ -84,7 +90,7 @@ $(document).ready(function () {
 
             // add other players
             data.otherPlayers.forEach(function (player) {
-                players.push(new Player(player.id, new PhysObj(player.x, player.y, 20, 128, 128)));
+                players.push(new Player(player.id, player.name, new PhysObj(player.x, player.y, 20, 128, 128)));
             });
 
             data.messages.forEach(function (message) {
@@ -112,7 +118,7 @@ $(document).ready(function () {
             }
 
             if (!found) {
-                players.push(new Player(data.player.id, new PhysObj(data.player.x, data.player.y, 20, 128, 128)));
+                players.push(new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128)));
             }
         });
 
@@ -153,7 +159,22 @@ $(document).ready(function () {
         });
     }
 
-    join(Math.random().toString());
+    var $nameinput = $('#name-input');
+    var $enterbutton = $('#enter-button');
+
+    $nameinput.keypress(function (event) {
+        if (event.keyCode == 13) {
+            join($nameinput.val());
+            $('#start-page').hide()
+        }
+    });
+
+    $enterbutton.click(function () {
+        join($nameinput.val());
+        $('#start-page').hide()
+    });
+
+    //join(Math.random().toString());
 
     function addVoices() {
         var voices = window.speechSynthesis.getVoices();
@@ -322,7 +343,7 @@ $(document).ready(function () {
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
 
             for (var i = 0; i < players.length; i++) {
-                var weapon = players[0].weapons[players[0].selectedWeapon];
+                var weapon = players[i].weapons[players[i].selectedWeapon];
                 drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 0);
                 drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 0);
                 context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x+25), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);

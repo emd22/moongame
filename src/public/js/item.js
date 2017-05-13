@@ -41,7 +41,7 @@ var weaponList = [
 ];
 
 var weapon_none = weaponList[0];
-var SG108 = weaponList[1];
+var weapon_sg108 = weaponList[1];
 
 function WeaponProps(damage, magSize) {
     this.damage = damage;

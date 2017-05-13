@@ -7,7 +7,14 @@
   </head>
   <body>
     <canvas id="main-canvas" width="500" height="250"></canvas>
-    <button id="open-button">Chat ;)</button>
+
+    <div id="start-page">
+      <h4>Enter a username below<h4>
+      <input id="name-input">
+      <button id="enter-button">Join</button>
+    </div>
+    
+    <button id="open-button">Open Chat</button>
     <div id="main-sidebar">
       <div class="wrapper">
         <a id="sidebar-close">
@@ -26,7 +33,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://ethanmakescode.com'); //192.168.2.11:8080
+      var socket = io.connect('http://192.168.2.11:8080'); //192.168.2.11:8080
     </script>
 
     <script src="js/keypress.js"></script>

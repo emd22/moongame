@@ -46,7 +46,7 @@ canvas {
   position: absolute;
   height: 100%;
   width: 0px;
-  background-color: rgba(0,0,0,0.95);
+  background-color: rgba(0,0,0,0.85);
   transition: width 0.5s ease;
   overflow: hidden;
 }
@@ -63,6 +63,12 @@ canvas {
   border-right: 5px solid #eee;
 }
 
+#start-page {
+  position: absolute;
+  text-align: center;
+}
+
 #open-button {
   position: absolute;
+  visibility: hidden;
 }
