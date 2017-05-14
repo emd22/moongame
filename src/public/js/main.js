@@ -37,7 +37,6 @@ $(document).ready(function () {
     function speak(text, player) {
         window.speechSynthesis.cancel(); 
         message.text = text;
-        message.voice = speechSynthesis.getVoices()[0];
         window.speechSynthesis.speak(message);
     }
 
