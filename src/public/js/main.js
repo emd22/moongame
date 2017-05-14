@@ -230,9 +230,13 @@ $(document).ready(function () {
         var stars = [];
         var chunks = [];
 
+        var enemys = [];
+
         var playerHead = new Entity("img/player_def.png", 4);
         var playerTorso = new Entity("img/player_def.png", 4);
         var playerLegs = new Entity("img/player_def.png", 4);
+
+        var alien_blob = new Entity("img/alien_blob.png", 4);
 
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
@@ -291,6 +295,15 @@ $(document).ready(function () {
             }
         }
 
+        function fillEnemys() {
+            for (var i = 0; i < 20; i++) {
+                var phys = new PhysObj(200+100*i, 0, 20, 10, 10, false);
+                var enemy = new BasicEntity(phys);
+                console.log(enemy)
+                enemys.push(enemy);
+            }
+        }
+
         function fillStars() {
             for (var i = 0; i < 250; i++) {
                 var star = new Star();
@@ -302,6 +315,7 @@ $(document).ready(function () {
             }
         }
 
+        fillEnemys();
         fillStars();
         fillChunks();
 
@@ -322,13 +336,15 @@ $(document).ready(function () {
                 y: canvas.height / expectedSize.height
             };
 
-            updatePhys(canvRatio);
+            updatePhys(enemys, canvRatio);
             // clear the screen.
             fillScreen('black');
 
             loadImageSlice(playerHead);
             loadImageSlice(playerTorso);
             loadImageSlice(playerLegs);
+
+            loadImageSlice(alien_blob);
 
             stars[rand].size += 0.08;
 
@@ -354,6 +370,10 @@ $(document).ready(function () {
             for (var i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
+            }
+
+            for (var i = 0; i < enemys.length; i++) {
+                drawSprite(alien_blob, canvRatio, enemys[i]._x, enemys[i]._y, 64, 0, 128, 128, 0);
             }
 
             if (Math.floor(stars[rand].size) != 1) {

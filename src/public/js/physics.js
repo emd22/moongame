@@ -3,27 +3,28 @@ var x = 0;
 var y = 0;
 var playerPhys = new PhysObj(x, y, 20, 128, 128);
 
-function updatePhys(canvRatio) {
+function updatePhys(enemys, canvRatio) {
     for (var i = 0; i < players.length; i++) {
         players[i].physObj = new PhysObj(players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 20, 128, 128);
 
         gravity(players[i], canvRatio);
         walkPhys(players[i]);
     }
+    for (var i = 0; i < enemys.length; i++) {
+        enemys[i].physObj = new PhysObj(enemys[i]._x * canvRatio.x, enemys[i]._y * canvRatio.y, 20, 128, 80);
+
+        gravity(enemys[i], canvRatio);
+        walkPhys(enemys[i]);
+    }
 }
 
-function PhysObj(x, y, mass, width, height, nocollide) {
+function PhysObj(x, y, mass, width, height) {
     this.x = x;
     this.y = y;
 
     this.width = width;
     this.height = height;
-
-    if (mass == undefined) {
-        this.mass = 0;
-    } else {
-        this.mass = mass;
-    }
+    this.mass = mass;
 }
 
 function gravity(player, canvRatio) {
