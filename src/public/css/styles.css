@@ -68,6 +68,10 @@ canvas {
   text-align: center;
 }
 
+#create-button {
+  position: inline-block;
+}
+
 #open-button {
   position: absolute;
   visibility: hidden;

@@ -32,6 +32,10 @@ var currentUsers = [];
 io.on('connection', function (socket) {
   console.log('New Connection');
 
+  socket.on('create room', function (data) {
+    socket.join(data.roomKey);
+  });
+
   socket.on('player join', function (data) {
     if (data == undefined) {
       socket.emit('error', { message: 'Data undefined' });

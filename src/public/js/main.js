@@ -361,7 +361,7 @@ $(document).ready(function () {
                 var weapon = players[i].weapons[players[i].selectedWeapon];
                 drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 0);
                 drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 0);
-                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x+25), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x+65), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
                 drawSprite(playerLegs, canvRatio, players[i]._x, players[i]._y, 64, 2, 128, 128, 0);
                 //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
@@ -371,9 +371,9 @@ $(document).ready(function () {
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
-            for (var i = 0; i < enemys.length; i++) {
-                drawSprite(alien_blob, canvRatio, enemys[i]._x, enemys[i]._y, 64, 0, 128, 128, 0);
-            }
+            // for (var i = 0; i < enemys.length; i++) {
+            //     drawSprite(alien_blob, canvRatio, enemys[i]._x, enemys[i]._y, 64, 0, 128, 128, 0);
+            // }
 
             if (Math.floor(stars[rand].size) != 1) {
                 stars[rand].size = orgSize;

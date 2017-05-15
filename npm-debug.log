@@ -7,8 +7,8 @@
 6 silly lifecycle ethans_game@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle ethans_game@1.0.0~start: ethans_game@1.0.0
 8 verbose lifecycle ethans_game@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle ethans_game@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/ethan/Desktop/ethans_game/node_modules/.bin:/home/ethan/.cargo/bin:/home/ethan/bin:/home/ethan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
-10 verbose lifecycle ethans_game@1.0.0~start: CWD: /home/ethan/Desktop/ethans_game
+9 verbose lifecycle ethans_game@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/ethan/Desktop/moongame/node_modules/.bin:/home/ethan/Desktop/cocos2d-x-3.13.1/templates:/home/ethan/Desktop:/home/ethan/Desktop/cocos2d-x-3.13.1/tools/cocos2d-console/bin:/home/ethan/bin:/home/ethan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+10 verbose lifecycle ethans_game@1.0.0~start: CWD: /home/ethan/Desktop/moongame
 11 silly lifecycle ethans_game@1.0.0~start: Args: [ '-c', 'node src/server.js' ]
 12 silly lifecycle ethans_game@1.0.0~start: Returned: code: 1  signal: null
 13 info lifecycle ethans_game@1.0.0~start: Failed to exec start script
@@ -23,8 +23,8 @@
 14 verbose stack     at maybeClose (internal/child_process.js:821:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
 15 verbose pkgid ethans_game@1.0.0
-16 verbose cwd /home/ethan/Desktop/ethans_game
-17 error Linux 4.4.0-53-generic
+16 verbose cwd /home/ethan/Desktop/moongame
+17 error Linux 4.4.0-62-generic
 18 error argv "/usr/bin/nodejs" "/usr/bin/npm" "run" "start"
 19 error node v4.2.6
 20 error npm  v3.5.2
