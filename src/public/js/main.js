@@ -42,8 +42,13 @@ $(document).ready(function () {
 
     $messageinput.keypress(function (event) {
         if (event.keyCode == 13) {
+            var myPlayer = players.find(function (el) {
+                return el.id == myPlayerId;
+            });
+            
             socket.emit('player send message', {
-                message: $(this).val()
+                message: $(this).val(),
+                sender: myPlayer.name
             });
 
             $messageinput.val("");
@@ -62,13 +67,14 @@ $(document).ready(function () {
         });
 
         socket.on('message sent', function (data) {
-            $('#messages').append('<h5>' + escapeHtml(data.message) + '</h5>');
             var myPlayer = players.find(function (el) {
                 return el.id == myPlayerId;
             });
             var player = players.find(function (el) {
                 return el.id == data.playerId;
             });
+            var playername = '[' + player.name + '] ';
+            $('#messages').append('<h5>' + playername + escapeHtml(data.message) + '</h5>');
             speak(player.name+" said "+data.message, myPlayer);
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
@@ -93,7 +99,8 @@ $(document).ready(function () {
             });
 
             data.messages.forEach(function (message) {
-                $('#messages').append('<h5>' + escapeHtml(message.message) + '</h5>');
+                var playername = '[' + escapeHtml(message.sender) + '] ';
+                $('#messages').append('<h5>' + playername + escapeHtml(message.message) + '</h5>');
             });
 
             setInterval(function () {
@@ -117,6 +124,10 @@ $(document).ready(function () {
             }
 
             if (!found) {
+                socket.emit('message sent', {
+                    message: 'Player '+data.player.name+' has joined',
+                    playerId: data.player.id
+                });
                 players.push(new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128)));
             }
         });
@@ -240,11 +251,20 @@ $(document).ready(function () {
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
 
-        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h, noXStretch) {
+        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h, min) {
             context.mozImageSmoothingEnabled = false;
             context.webkitImageSmoothingEnabled = false;
             context.msImageSmoothingEnabled = false;
             context.imageSmoothingEnabled = false;
+
+            if (min == undefined) {
+                w *= canvRatio.y;
+                h *= canvRatio.y;
+            }
+            else {
+                w = Math.max(w * canvRatio.y, min);
+                h = Math.max(h * canvRatio.y, min);
+            }
 
             //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
 
@@ -254,10 +274,10 @@ $(document).ready(function () {
                 yIndex * cutW,
                 cutW,
                 cutW,
-                x * canvRatio.x,
-                y * canvRatio.y,
-                w * canvRatio.y,
-                h * canvRatio.y
+                x * Math.min(canvRatio.x, 128),
+                y * Math.min(canvRatio.y, 128),
+                w,
+                h
             );
         }
 
@@ -359,10 +379,10 @@ $(document).ready(function () {
 
             for (var i = 0; i < players.length; i++) {
                 var weapon = players[i].weapons[players[i].selectedWeapon];
-                drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 0);
-                drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 0);
-                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x+65), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
-                drawSprite(playerLegs, canvRatio, players[i]._x, players[i]._y, 64, 2, 128, 128, 0);
+                drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 64);
+                drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 64);
+                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x-canvRatio.y), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+                drawSprite(playerLegs, canvRatio, players[i]._x, players[i]._y, 64, 2, 128, 128, 64);
                 //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
 

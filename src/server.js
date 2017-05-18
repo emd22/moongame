@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
         });
         new Message({
           message: data.message,
-          sender: socket.id
+          sender: data.sender
         }).save().then(function(message) {
           console.log("MESSAGE SAVE SUCCESSFULLY");
         }).catch(function (err) {
