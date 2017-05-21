@@ -1,4 +1,4 @@
-var jetpack = new Powerup("Jetpack", 1500);
+var jetpack = new Powerup("Jetpack", 2500);
 var superspeed = new Powerup("Super Speed", 2000)
 
 function lowerCapacity(player, type, amt) {

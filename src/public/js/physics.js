@@ -1,24 +1,34 @@
 var physicsObjects = [];
 var x = 0;
 var y = 0;
-var playerPhys = new PhysObj(x, y, 20, 128, 128);
+var playerPhys = new PhysObj(x, y, 20, 128, 128, "Player");
+
+// function editPhysicsObject(type, newX, newY) {
+//     for (var i = 0; i < physicsObjects.length; i++) {
+//         if (physicsObjects[i].type == type) {
+//             physicsObjects[i].x = newX;
+//             physicsObjects[i].y = newY;
+//             break;
+//         }
+//     }
+// }
 
 function updatePhys(enemys, canvRatio) {
     for (var i = 0; i < players.length; i++) {
-        players[i].physObj = new PhysObj(players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 20, 128, 128);
+        players[i].physObj = new PhysObj(players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 20, 128, 128, "Player");
 
         gravity(players[i], canvRatio);
         walkPhys(players[i]);
     }
     for (var i = 0; i < enemys.length; i++) {
-        enemys[i].physObj = new PhysObj(enemys[i]._x * canvRatio.x, enemys[i]._y * canvRatio.y, 20, 128, 80);
+        enemys[i].physObj = new PhysObj(enemys[i]._x * canvRatio.x, enemys[i]._y * canvRatio.y, 20, 128*3, 80*3, "Enemy");
 
         gravity(enemys[i], canvRatio);
         walkPhys(enemys[i]);
     }
 }
 
-function PhysObj(x, y, mass, width, height) {
+function PhysObj(x, y, mass, width, height, type) {
     this.x = x;
     this.y = y;
 
@@ -104,7 +114,7 @@ document.addEventListener('keydown', function (event) {
     else if (key == "d") {
         var moveSpeed = 1;
         if (findPowerup(myPlayer, "Super Speed") != -1) {
-            moveSpeed = 5;
+            moveSpeed = 1.5;
             lowerCapacity(myPlayer, "Super Speed", 5);
         }
 

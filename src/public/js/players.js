@@ -17,6 +17,8 @@ function Player(id, name, physObj) {
 function BasicEntity(physObj) {
     this.physObj = physObj;
 
+    this.powerups = [];
+
     this._x = physObj.x;
     this._y = physObj.y;
     this.walkVelocity = 0;
@@ -101,6 +103,4 @@ Player.prototype.walkPhys = function (sendToServer) {
 
 var myPlayerId;
 
-var players = [
-    
-];
+var players = [];

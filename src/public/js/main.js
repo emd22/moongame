@@ -32,20 +32,28 @@ $(document).ready(function () {
     var $messageinput = $('#message-input');
     var $messages = $('#messages');
 
+    var $roomcreatebutton = $('#room-create-button');
+
     var message = new SpeechSynthesisUtterance();
 
     function speak(text, player) {
-        window.speechSynthesis.cancel(); 
+        window.speechSynthesis.cancel();
         message.text = text;
         window.speechSynthesis.speak(message);
     }
+
+    $roomcreatebutton.click(function (event) {
+        socket.emit('create room', {
+            roomKey: "pooper"
+        })
+    });
 
     $messageinput.keypress(function (event) {
         if (event.keyCode == 13) {
             var myPlayer = players.find(function (el) {
                 return el.id == myPlayerId;
             });
-            
+
             socket.emit('player send message', {
                 message: $(this).val(),
                 sender: myPlayer.name
@@ -53,7 +61,7 @@ $(document).ready(function () {
 
             $messageinput.val("");
         }
-    })
+    });
 
     function join(name) {
         $('#open-button').css('visibility', 'visible');
@@ -75,7 +83,7 @@ $(document).ready(function () {
             });
             var playername = '[' + player.name + '] ';
             $('#messages').append('<h5>' + playername + escapeHtml(data.message) + '</h5>');
-            speak(player.name+" said "+data.message, myPlayer);
+            speak(player.name + " said " + data.message, myPlayer);
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
         });
@@ -125,7 +133,7 @@ $(document).ready(function () {
 
             if (!found) {
                 socket.emit('message sent', {
-                    message: 'Player '+data.player.name+' has joined',
+                    message: 'Player ' + data.player.name + ' has joined',
                     playerId: data.player.id
                 });
                 players.push(new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128)));
@@ -251,20 +259,14 @@ $(document).ready(function () {
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
 
-        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h, min) {
+        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h) {
             context.mozImageSmoothingEnabled = false;
             context.webkitImageSmoothingEnabled = false;
             context.msImageSmoothingEnabled = false;
             context.imageSmoothingEnabled = false;
 
-            if (min == undefined) {
-                w *= canvRatio.y;
-                h *= canvRatio.y;
-            }
-            else {
-                w = Math.max(w * canvRatio.y, min);
-                h = Math.max(h * canvRatio.y, min);
-            }
+            w *= canvRatio.y;
+            h *= canvRatio.y;
 
             //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
 
@@ -309,16 +311,16 @@ $(document).ready(function () {
                 chunk.y = expectedSize.height - 10;
                 chunk.width = 64;
                 chunk.height = 10;
+                chunk.type = "GroundChunk";
                 physicsObjects.push(chunk);
                 chunks.push(chunk);
             }
         }
 
         function fillEnemys() {
-            for (var i = 0; i < 20; i++) {
-                var phys = new PhysObj(200+100*i, 0, 20, 10, 10, false);
+            for (var i = 0; i < 2; i++) {
+                var phys = new PhysObj(200 + 128 * 3 * i, 0, 20, 10, 10, "Enemy");
                 var enemy = new BasicEntity(phys);
-                console.log(enemy)
                 enemys.push(enemy);
             }
         }
@@ -348,13 +350,18 @@ $(document).ready(function () {
         }
 
         function draw() {
-            updateMobile(canvas);
-
             var canvRatio = {
                 x: canvas.width / expectedSize.width,
                 y: canvas.height / expectedSize.height
             };
 
+            cam.offsetX = canvas.width * canvRatio.x / 2 - 400;
+            cam.x = players[0]._x - (canvas.width * canvRatio.x / 2);
+            cam.y = players[0]._y;
+
+            var playerGunX = players[0]._x - (canvas.width * canvRatio.x / 2) - cam.offsetX;
+
+            updateMobile(canvas);
             updatePhys(enemys, canvRatio);
             // clear the screen.
             fillScreen('black');
@@ -365,7 +372,7 @@ $(document).ready(function () {
 
             loadImageSlice(alien_blob);
 
-            stars[rand].size += 0.08;
+            stars[rand].size += 0.1;
 
             for (var i = 0; i < stars.length; i++) {
                 var star = stars[i];
@@ -377,22 +384,29 @@ $(document).ready(function () {
 
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
 
-            for (var i = 0; i < players.length; i++) {
+            var weapon = players[0].weapons[players[0].selectedWeapon];
+
+            drawSprite(playerHead, canvRatio, canvas.width / 2 * canvRatio.x - cam.offsetX, players[0]._y, 64, 0, 128, 128);
+            drawSprite(playerTorso, canvRatio, canvas.width / 2 * canvRatio.x - cam.offsetX, players[0]._y, 64, 1, 128, 128);
+            context.drawImage(weapon.image, 0, 0, 64, 64, ((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x, (players[0]._y + 50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+            drawSprite(playerLegs, canvRatio, (canvas.width / 2) * canvRatio.x - cam.offsetX, players[0]._y, 64, 2, 128, 128);
+
+            for (var i = 1; i < players.length; i++) {
                 var weapon = players[i].weapons[players[i].selectedWeapon];
-                drawSprite(playerHead, canvRatio, players[i]._x, players[i]._y, 64, 0, 128, 128, 64);
-                drawSprite(playerTorso, canvRatio, players[i]._x, players[i]._y, 64, 1, 128, 128, 64);
-                context.drawImage(weapon.image, 0, 0, 64, 64, (players[i]._x*canvRatio.x-canvRatio.y), (players[i]._y+50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
-                drawSprite(playerLegs, canvRatio, players[i]._x, players[i]._y, 64, 2, 128, 128, 64);
+                drawSprite(playerHead, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 0, 128, 128);
+                drawSprite(playerTorso, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 1, 128, 128);
+                context.drawImage(weapon.image, 0, 0, 64, 64, ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y), (players[i]._y + 50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+                drawSprite(playerLegs, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 2, 128, 128);
                 //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
 
             for (var i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];
-                context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, chunk.x * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
+                context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, (chunk.x - cam.x - cam.offsetX) * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
             // for (var i = 0; i < enemys.length; i++) {
-            //     drawSprite(alien_blob, canvRatio, enemys[i]._x, enemys[i]._y, 64, 0, 128, 128, 0);
+            //     drawSprite(alien_blob, canvRatio, enemys[i]._x - camX, enemys[i]._y, 64, 0, 128*3, 128*3, "Enemy");
             // }
 
             if (Math.floor(stars[rand].size) != 1) {
