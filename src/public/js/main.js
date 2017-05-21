@@ -32,8 +32,6 @@ $(document).ready(function () {
     var $messageinput = $('#message-input');
     var $messages = $('#messages');
 
-    var $roomcreatebutton = $('#room-create-button');
-
     var message = new SpeechSynthesisUtterance();
 
     function speak(text, player) {
@@ -41,12 +39,6 @@ $(document).ready(function () {
         message.text = text;
         window.speechSynthesis.speak(message);
     }
-
-    $roomcreatebutton.click(function (event) {
-        socket.emit('create room', {
-            roomKey: "pooper"
-        })
-    });
 
     $messageinput.keypress(function (event) {
         if (event.keyCode == 13) {
@@ -308,9 +300,9 @@ $(document).ready(function () {
             for (var i = 0; i < 8; i++) {
                 var chunk = new PhysObj();
                 chunk.x = i * 128;
-                chunk.y = expectedSize.height - 10;
+                chunk.y = expectedSize.height - 30;
                 chunk.width = 64;
-                chunk.height = 10;
+                chunk.height = 64;
                 chunk.type = "GroundChunk";
                 physicsObjects.push(chunk);
                 chunks.push(chunk);
@@ -330,7 +322,7 @@ $(document).ready(function () {
                 var star = new Star();
                 var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                 star.size = rand;
-                star.x = Math.floor(Math.random() * (expectedSize.width + 1));
+                star.x = Math.floor(Math.random() * (expectedSize.width+starsWidth + 1));
                 star.y = Math.floor(Math.random() * (expectedSize.height + 1));
                 stars.push(star);
             }
@@ -377,7 +369,7 @@ $(document).ready(function () {
             for (var i = 0; i < stars.length; i++) {
                 var star = stars[i];
 
-                drawSprite(star11, canvRatio, star.x, star.y, 1, 0, 2 * star.size, 2 * star.size);
+                drawSprite(star11, canvRatio, star.x - (cam.x * 0.3) - canvas.width/2, star.y, 1, 0, 2 * star.size, 2 * star.size);
 
                 //context.drawImage(star11.image, star11.frameIndex, 0, 1, 1, star.x * canvRatio.x, star.y * canvRatio.y, 2 * star.size, 2 * star.size);
             }
@@ -386,16 +378,35 @@ $(document).ready(function () {
 
             var weapon = players[0].weapons[players[0].selectedWeapon];
 
-            drawSprite(playerHead, canvRatio, canvas.width / 2 * canvRatio.x - cam.offsetX, players[0]._y, 64, 0, 128, 128);
-            drawSprite(playerTorso, canvRatio, canvas.width / 2 * canvRatio.x - cam.offsetX, players[0]._y, 64, 1, 128, 128);
-            context.drawImage(weapon.image, 0, 0, 64, 64, ((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x, (players[0]._y + 50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
-            drawSprite(playerLegs, canvRatio, (canvas.width / 2) * canvRatio.x - cam.offsetX, players[0]._y, 64, 2, 128, 128);
+            context.font = "18px monospace";
+            context.fillStyle = "#fff";
+
+            var currentPlayerX = canvas.width / 2 * canvRatio.x - cam.offsetX;
+
+            context.fillText("You ("+players[0].name+")", ((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x, players[0]._y-10);
+            drawSprite(playerHead, canvRatio, currentPlayerX, players[0]._y, 64, 0, 128, 128);
+            drawSprite(playerTorso, canvRatio, currentPlayerX, players[0]._y, 64, 1, 128, 128);
+            
+            context.drawImage(weapon.image, 0, 0, 64, 64,
+                             (((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x)+cam.gunOffsetX,
+                             ((players[0]._y + 50) * canvRatio.y)+cam.gunOffsetY,
+                             192 * canvRatio.y, 
+                             192 * canvRatio.y);
+
+            drawSprite(playerLegs, canvRatio, currentPlayerX, players[0]._y, 64, 2, 128, 128);
 
             for (var i = 1; i < players.length; i++) {
+                context.fillText(players[i].name, ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y), players[i]._y-10);
                 var weapon = players[i].weapons[players[i].selectedWeapon];
                 drawSprite(playerHead, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 0, 128, 128);
                 drawSprite(playerTorso, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 1, 128, 128);
-                context.drawImage(weapon.image, 0, 0, 64, 64, ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y), (players[i]._y + 50) * canvRatio.y, 192 * canvRatio.y, 192 * canvRatio.y);
+
+                context.drawImage(weapon.image, 0, 0, 64, 64,
+                                 ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y)+cam.gunOffsetX, 
+                                 ((players[i]._y + 50) * canvRatio.y)+cam.gunOffsetY, 
+                                 192 * canvRatio.y, 
+                                 192 * canvRatio.y);
+                
                 drawSprite(playerLegs, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 2, 128, 128);
                 //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
             }
@@ -406,7 +417,7 @@ $(document).ready(function () {
             }
 
             // for (var i = 0; i < enemys.length; i++) {
-            //     drawSprite(alien_blob, canvRatio, enemys[i]._x - camX, enemys[i]._y, 64, 0, 128*3, 128*3, "Enemy");
+            //     drawSprite(alien_blob, canvRatio, enemys[i]._x - cam.x, enemys[i]._y, 64, 0, 128*3, 128*3, "Enemy");
             // }
 
             if (Math.floor(stars[rand].size) != 1) {

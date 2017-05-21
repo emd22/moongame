@@ -14,7 +14,15 @@ app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
+  res.sendfile(__dirname + '/main/index.html');
+});
+
+app.get('/about', function (req, res) {
+  res.sendfile(__dirname + '/about/index.html');
+});
+
+app.get('/game', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
@@ -31,10 +39,6 @@ var currentUsers = [];
 
 io.on('connection', function (socket) {
   console.log('New Connection');
-
-  socket.on('create room', function (data) {
-    socket.join(data.roomKey);
-  });
 
   socket.on('player join', function (data) {
     if (data == undefined) {
