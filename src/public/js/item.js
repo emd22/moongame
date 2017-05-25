@@ -1,5 +1,5 @@
 var jetpack = new Powerup("Jetpack", 2500);
-var superspeed = new Powerup("Super Speed", 2000)
+var superspeed = new Powerup("Super Speed", 2000);
 
 function lowerCapacity(player, type, amt) {
     var powerIndex = findPowerup(player, type);
@@ -36,21 +36,68 @@ function Powerup(type, duration) {
 }
 
 var weaponList = [
-    new Weapon(new WeaponProps(0, 0), "None", "none.png"),
-    new Weapon(new WeaponProps(10, 8), "SG108", "shotgun.png")
+    new Weapon(new WeaponProps(0, 0, 0), new Ammo("ammo.png", 0), "None", "none.png", 0),
+    new Weapon(new WeaponProps(10, 8, 50), new Ammo("ammo.png", 10000), "SG108", "shotgun.png", 100)
 ];
 
 var weapon_none = weaponList[0];
 var weapon_sg108 = weaponList[1];
 
-function WeaponProps(damage, magSize) {
+var ammoRounds = [];
+
+
+function WeaponProps(damage, magSize, bulletSpeed) {
     this.damage = damage;
     this.magSize = magSize;
+    this.bulletSpeed = bulletSpeed;
 }
 
-function Weapon(weaponProps, name, imageSrc) {
+function Weapon(weaponProps, newAmmo, name, imageSrc, ammo) {
     this.weaponProps = weaponProps;
+    this.newAmmo = newAmmo;
     this.name = name;
     this.image = new Image();
-    this.image.src = "img/weapons/"+imageSrc;
+    this.image.src = "img/weapons/" + imageSrc;
+    this.ammo = ammo;
+}
+
+function Ammo(imageSrc, range, ammoX, ammoY) {
+    this.ammoX = ammoX;
+    this.ammoY = ammoY;
+    this.image = new Entity("img/weapons/ammo.png", 0, 0);
+    this.range = range;
+}
+
+function findWeapon(name, player) {
+    for (var i = 0; i < player.weapons.length; i++) {
+        if (player.weapons[i].name == name) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function updateBullet(player) {
+    var currentWeapon = player.weapons[player.selectedWeapon];
+
+    for (var i = 0; i < ammoRounds.length; i++) {
+        ammoRounds[i].ammoX += currentWeapon.weaponProps.bulletSpeed;
+        drawSprite(ammoRounds[i].image, ammoRounds[i].ammoX, ammoRounds[i].ammoY, 32, 0, 64, 64);
+        if (ammoRounds[i].ammoX >= ammoRounds[i].range) {
+            ammoRounds.splice(i, 1);
+        }
+    }
+}
+
+function shootWeapon() {
+    var currentWeapon = players[0].weapons[players[0].selectedWeapon];
+
+    var bulletX = (((players[0]._x - cam.x + 50) - cam.offsetX) * canvRatio.x) + cam.gunOffsetX;
+    var bulletY = ((players[0]._y + 15) * canvRatio.y) + cam.gunOffsetY;
+
+    if (currentWeapon.ammo <= 0) {
+        return;
+    }
+
+    ammoRounds.push(new Ammo(currentWeapon.newAmmo.image, currentWeapon.newAmmo.range, bulletX, bulletY));
 }

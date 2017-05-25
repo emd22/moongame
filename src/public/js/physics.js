@@ -14,13 +14,15 @@ var playerPhys = new PhysObj(x, y, 20, 128, 128, "Player");
 // }
 
 function updatePhys(enemys, canvRatio) {
-    for (var i = 0; i < players.length; i++) {
+    var i;
+
+    for (i = 0; i < players.length; i++) {
         players[i].physObj = new PhysObj(players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 20, 128, 128, "Player");
 
         gravity(players[i], canvRatio);
         walkPhys(players[i]);
     }
-    for (var i = 0; i < enemys.length; i++) {
+    for (i = 0; i < enemys.length; i++) {
         enemys[i].physObj = new PhysObj(enemys[i]._x * canvRatio.x, enemys[i]._y * canvRatio.y, 20, 128*3, 80*3, "Enemy");
 
         gravity(enemys[i], canvRatio);
@@ -58,7 +60,7 @@ function gravity(player, canvRatio) {
             y: player._y * canvRatio.y,
             width: player.physObj.width * canvRatio.x,
             height: player.physObj.height * canvRatio.y
-        }
+        };
 
         var oldx = player._x;
         var oldy = player._y;
@@ -79,6 +81,8 @@ function gravity(player, canvRatio) {
 
 document.addEventListener('keydown', function (event) {
     var key = String.fromCharCode(event.keyCode).toLowerCase();
+
+    var moveSpeed;
 
     var myPlayer = players.find(function (el) {
         return el.id == myPlayerId;
@@ -102,7 +106,7 @@ document.addEventListener('keydown', function (event) {
         myPlayer.setGravityVelocity(myPlayer.gravityVelocity + 0.7, true);
     }
     if (key == "a") {
-        var moveSpeed = 1;
+        moveSpeed = 1;
         if (findPowerup(myPlayer, "Super Speed") != -1) {
             moveSpeed = 5;
             lowerCapacity(myPlayer, "Super Speed", 5);
@@ -112,7 +116,7 @@ document.addEventListener('keydown', function (event) {
         }
     }
     else if (key == "d") {
-        var moveSpeed = 1;
+        moveSpeed = 1;
         if (findPowerup(myPlayer, "Super Speed") != -1) {
             moveSpeed = 1.5;
             lowerCapacity(myPlayer, "Super Speed", 5);
@@ -121,6 +125,9 @@ document.addEventListener('keydown', function (event) {
         if (myPlayer.walkVelocity < 5) {
             myPlayer.setWalkVelocity(myPlayer.walkVelocity + moveSpeed, true);
         }
+    }
+    if (key == " ") {
+        shootWeapon();
     }
 });
 

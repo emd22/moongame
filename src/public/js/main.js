@@ -85,11 +85,11 @@ $(document).ready(function () {
             myPlayerId = data.player.id;
             console.log('myPlayerId = ', myPlayerId);
 
-            var myPlayer = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128))
+            var myPlayer = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128));
 
             myPlayer.name = name;
 
-            console.log(speechSynthesis.getVoices())
+            console.log(speechSynthesis.getVoices());
 
             players.push(myPlayer);
 
@@ -107,8 +107,8 @@ $(document).ready(function () {
                 socket.emit('move player', {
                     x: myPlayer._x,
                     y: myPlayer._y
-                })
-            }, 500)
+                });
+            }, 500);
 
             afterJoined();
         });
@@ -175,13 +175,13 @@ $(document).ready(function () {
     $nameinput.keypress(function (event) {
         if (event.keyCode == 13) {
             join($nameinput.val());
-            $('#start-page').hide()
+            $('#start-page').hide();
         }
     });
 
     $enterbutton.click(function () {
         join($nameinput.val());
-        $('#start-page').hide()
+        $('#start-page').hide();
     });
 
     //join(Math.random().toString());
@@ -200,6 +200,8 @@ $(document).ready(function () {
         var canvas = $canvas[0];
         // get 2D context for drawing on canvas.
         var context = canvas.getContext('2d');
+
+        calcContext(context);
 
         $canvas.on('touchmove', function mouseState(e) {
             var touch = event.targetTouches[0];
@@ -221,27 +223,6 @@ $(document).ready(function () {
         $(window).resize(resizeCanvas);
         resizeCanvas();
 
-        function Entity(imageSrc, amtFrames, amtLines) {
-            this.image = new Image();
-            this.image.src = imageSrc;
-            this.frameNum = 0;
-            this.frameIndex = 0;
-            this.amtFrames = amtFrames;
-            this.amtLines = amtLines;
-        }
-
-        function Star(x, y) {
-            this.x = x;
-            this.y = y;
-            this.size = 1;
-            this.image;
-        }
-
-        var stars = [];
-        var chunks = [];
-
-        var enemys = [];
-
         var playerHead = new Entity("img/player_def.png", 4);
         var playerTorso = new Entity("img/player_def.png", 4);
         var playerLegs = new Entity("img/player_def.png", 4);
@@ -251,35 +232,11 @@ $(document).ready(function () {
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
 
-        function drawSprite(entity, canvRatio, x, y, cutW, yIndex, w, h) {
-            context.mozImageSmoothingEnabled = false;
-            context.webkitImageSmoothingEnabled = false;
-            context.msImageSmoothingEnabled = false;
-            context.imageSmoothingEnabled = false;
-
-            w *= canvRatio.y;
-            h *= canvRatio.y;
-
-            //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
-
-            context.drawImage(
-                entity.image,
-                entity.frameIndex,
-                yIndex * cutW,
-                cutW,
-                cutW,
-                x * Math.min(canvRatio.x, 128),
-                y * Math.min(canvRatio.y, 128),
-                w,
-                h
-            );
-        }
-
         function loadImageSlice(entity, frameIncrement, splitWidth) {
-            if (frameIncrement == undefined) {
+            if (frameIncrement === undefined) {
                 frameIncrement = 0.2;
             }
-            if (splitWidth == undefined) {
+            if (splitWidth === undefined) {
                 splitWidth = 64;
             }
 
@@ -296,41 +253,9 @@ $(document).ready(function () {
             context.fill();
         }
 
-        function fillChunks() {
-            for (var i = 0; i < 8; i++) {
-                var chunk = new PhysObj();
-                chunk.x = i * 128;
-                chunk.y = expectedSize.height - 30;
-                chunk.width = 64;
-                chunk.height = 64;
-                chunk.type = "GroundChunk";
-                physicsObjects.push(chunk);
-                chunks.push(chunk);
-            }
-        }
-
-        function fillEnemys() {
-            for (var i = 0; i < 2; i++) {
-                var phys = new PhysObj(200 + 128 * 3 * i, 0, 20, 10, 10, "Enemy");
-                var enemy = new BasicEntity(phys);
-                enemys.push(enemy);
-            }
-        }
-
-        function fillStars() {
-            for (var i = 0; i < 250; i++) {
-                var star = new Star();
-                var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                star.size = rand;
-                star.x = Math.floor(Math.random() * (expectedSize.width+starsWidth + 1));
-                star.y = Math.floor(Math.random() * (expectedSize.height + 1));
-                stars.push(star);
-            }
-        }
-
         fillEnemys();
         fillStars();
-        fillChunks();
+        fillChunks(expectedSize);
 
         // setup a function to draw everything in your game.
 
@@ -340,13 +265,16 @@ $(document).ready(function () {
         function update() {
             keypress();
         }
-
+        
         function draw() {
+            var i;
             var canvRatio = {
                 x: canvas.width / expectedSize.width,
                 y: canvas.height / expectedSize.height
             };
 
+            calcCanvRatio(canvRatio);
+            
             cam.offsetX = canvas.width * canvRatio.x / 2 - 400;
             cam.x = players[0]._x - (canvas.width * canvRatio.x / 2);
             cam.y = players[0]._y;
@@ -366,12 +294,10 @@ $(document).ready(function () {
 
             stars[rand].size += 0.1;
 
-            for (var i = 0; i < stars.length; i++) {
+            for (i = 0; i < stars.length; i++) {
                 var star = stars[i];
 
-                drawSprite(star11, canvRatio, star.x - (cam.x * 0.3) - canvas.width/2, star.y, 1, 0, 2 * star.size, 2 * star.size);
-
-                //context.drawImage(star11.image, star11.frameIndex, 0, 1, 1, star.x * canvRatio.x, star.y * canvRatio.y, 2 * star.size, 2 * star.size);
+                drawSprite(star11, star.x - (cam.x * 0.3) - canvas.width / 2, star.y, 1, 0, 2 * star.size, 2 * star.size);
             }
 
             var canvRatioAspect = (canvRatio.x + canvRatio.y) / 2;
@@ -383,35 +309,37 @@ $(document).ready(function () {
 
             var currentPlayerX = canvas.width / 2 * canvRatio.x - cam.offsetX;
 
-            context.fillText("You ("+players[0].name+")", ((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x, players[0]._y-10);
-            drawSprite(playerHead, canvRatio, currentPlayerX, players[0]._y, 64, 0, 128, 128);
-            drawSprite(playerTorso, canvRatio, currentPlayerX, players[0]._y, 64, 1, 128, 128);
-            
-            context.drawImage(weapon.image, 0, 0, 64, 64,
-                             (((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x)+cam.gunOffsetX,
-                             ((players[0]._y + 50) * canvRatio.y)+cam.gunOffsetY,
-                             192 * canvRatio.y, 
-                             192 * canvRatio.y);
+            fillText(players, 0, context, cam, canvRatio, "You (" + players[0].name + ")");
+            drawSprite(playerHead, currentPlayerX, players[0]._y, 64, 0, 128, 128);
+            drawSprite(playerTorso, currentPlayerX, players[0]._y, 64, 1, 128, 128);
 
-            drawSprite(playerLegs, canvRatio, currentPlayerX, players[0]._y, 64, 2, 128, 128);
+            var weaponX = (((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x) + cam.gunOffsetX;
+            var weaponY = ((players[0]._y + 50) * canvRatio.y) + cam.gunOffsetY;
 
-            for (var i = 1; i < players.length; i++) {
-                context.fillText(players[i].name, ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y), players[i]._y-10);
-                var weapon = players[i].weapons[players[i].selectedWeapon];
-                drawSprite(playerHead, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 0, 128, 128);
-                drawSprite(playerTorso, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 1, 128, 128);
+            updateBullet(players[0]);
 
-                context.drawImage(weapon.image, 0, 0, 64, 64,
-                                 ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y)+cam.gunOffsetX, 
-                                 ((players[i]._y + 50) * canvRatio.y)+cam.gunOffsetY, 
-                                 192 * canvRatio.y, 
-                                 192 * canvRatio.y);
-                
-                drawSprite(playerLegs, canvRatio, players[i]._x - cam.x - cam.offsetX, players[i]._y, 64, 2, 128, 128);
-                //context.drawImage(player.image, player.frameIndex, 0, 64, 64, players[i]._x * canvRatio.x, players[i]._y * canvRatio.y, 128 * canvRatio.y, 128 * canvRatio.y);
+            context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
+
+            drawSprite(playerLegs, currentPlayerX, players[0]._y, 64, 2, 128, 128);
+
+            for (i = 1; i < players.length; i++) {
+                fillText(players, i, context, cam, canvRatio);
+
+                weapon = players[i].weapons[players[i].selectedWeapon];
+                var offsetX = players[i]._x - cam.x - cam.offsetX;
+
+                drawSprite(playerHead, offsetX, players[i]._y, 64, 0, 128, 128);
+                drawSprite(playerTorso, offsetX, players[i]._y, 64, 1, 128, 128);
+
+                weaponX = ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y) + cam.gunOffsetX;
+                weaponY = ((players[i]._y + 50) * canvRatio.y) + cam.gunOffsetY;
+
+                context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
+
+                drawSprite(playerLegs, offsetX, players[i]._y, 64, 2, 128, 128);
             }
 
-            for (var i = 0; i < chunks.length; i++) {
+            for (i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];
                 context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, (chunk.x - cam.x - cam.offsetX) * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
