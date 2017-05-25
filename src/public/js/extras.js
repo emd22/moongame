@@ -101,3 +101,10 @@ function Entity(imageSrc, amtFrames, amtLines) {
     this.amtLines = amtLines;
 }
 
+function shootGun(player) {
+    var bullet = shootWeapon(player);
+    socket.emit("player shoots", {
+        bullet: bullet
+    });
+}
+

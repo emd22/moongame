@@ -141,6 +141,13 @@ $(document).ready(function () {
             }
         });
 
+        socket.on('player shoots', function (data) {
+            var player = players.find(function (el) {
+                return el.id == data.playerId;
+            });
+            shootWeapon(player);
+        });
+
         socket.on('move player', function (data) {
             for (var i = 0; i < players.length; i++) {
                 if (players[i].id == data.playerId) {
@@ -316,11 +323,16 @@ $(document).ready(function () {
             var weaponX = (((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x) + cam.gunOffsetX;
             var weaponY = ((players[0]._y + 50) * canvRatio.y) + cam.gunOffsetY;
 
-            updateBullet(players[0]);
-
             context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
 
             drawSprite(playerLegs, currentPlayerX, players[0]._y, 64, 2, 128, 128);
+
+            updateBullet(players[0]);
+
+            for (var j = 0; j < players[0].bulletObjs.length; j++) {
+                var bulletObj = players[0].bulletObjs[j];
+                drawSprite(bulletObj.image, bulletObj.ammoX, bulletObj.ammoY, 32, 0, 64, 64);
+            }
 
             for (i = 1; i < players.length; i++) {
                 fillText(players, i, context, cam, canvRatio);
@@ -337,6 +349,13 @@ $(document).ready(function () {
                 context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
 
                 drawSprite(playerLegs, offsetX, players[i]._y, 64, 2, 128, 128);
+
+                updateBullet(players[i]);
+
+                for (j = 0; j < players[i].bulletObjs.length; j++) {
+                    var bulletObj = players[i].bulletObjs[j];
+                    drawSprite(bulletObj.image, bulletObj.ammoX, bulletObj.ammoY, 32, 0, 64, 64);
+                }
             }
 
             for (i = 0; i < chunks.length; i++) {

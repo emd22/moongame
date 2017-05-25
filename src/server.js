@@ -41,11 +41,11 @@ io.on('connection', function (socket) {
   console.log('New Connection');
 
   socket.on('player join', function (data) {
-    if (data == undefined) {
+    if (data === undefined) {
       socket.emit('error', { message: 'Data undefined' });
       return;
     }
-    if (data.name == undefined) {
+    if (data.name === undefined) {
       socket.emit('error', { message: 'Name not entered' });
     } else {
       socket.player = new PlayerInfo(socket.id, data.name, 0, 0, 0, 0);
@@ -91,7 +91,14 @@ io.on('connection', function (socket) {
         }).catch(function (err) {
           console.error("ERROR SAVING MESSAGE: ", err);
         });
-      })
+      });
+
+      socket.on('player shoots', function (data) {
+        socket.broadcast.emit('player shoots', {
+          playerId: socket.player.id,
+          bullet: data.bullet,
+        });
+      });
 
       socket.on('move player', function (data) {
           //console.log("Got player move:", data);
@@ -123,8 +130,8 @@ io.on('connection', function (socket) {
           playerId: socket.player.id,
           name: socket.player.name,
           gravityVelocity: data.gravityVelocity
-        })
-      }) 
+        });
+      });
     }
   });
 });

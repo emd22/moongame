@@ -127,7 +127,7 @@ document.addEventListener('keydown', function (event) {
         }
     }
     if (key == " ") {
-        shootWeapon();
+        shootGun(myPlayer);
     }
 });
 

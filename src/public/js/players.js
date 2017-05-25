@@ -4,6 +4,7 @@ function Player(id, name, physObj) {
     this.physObj = physObj;
 
     this.powerups = [];
+    this.bulletObjs = [];
     this.weapons = [weapon_sg108];
     this.selectedWeapon = 0;
 
@@ -46,7 +47,7 @@ BasicEntity.prototype.setWalkVelocity = function (newWalkVelocity, sendToServer)
             walkVelocity: newWalkVelocity
         });
     }
-}
+};
 
 BasicEntity.prototype.setGravityVelocity = function (newGravityVelocity, sendToServer) {
     this.gravityVelocity = newGravityVelocity;
@@ -56,7 +57,7 @@ BasicEntity.prototype.setGravityVelocity = function (newGravityVelocity, sendToS
             gravityVelocity: newGravityVelocity
         });
     }
-}
+};
 
 BasicEntity.prototype.walkPhys = function (sendToServer) {
     this._x += this.walkVelocity;
@@ -84,7 +85,7 @@ Player.prototype.setWalkVelocity = function (newWalkVelocity, sendToServer) {
             walkVelocity: newWalkVelocity
         });
     }
-}
+};
 
 Player.prototype.setGravityVelocity = function (newGravityVelocity, sendToServer) {
     this.gravityVelocity = newGravityVelocity;
@@ -94,7 +95,7 @@ Player.prototype.setGravityVelocity = function (newGravityVelocity, sendToServer
             gravityVelocity: newGravityVelocity
         });
     }
-}
+};
 
 Player.prototype.walkPhys = function (sendToServer) {
     this._x += this.walkVelocity;
