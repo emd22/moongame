@@ -74,7 +74,7 @@ $(document).ready(function () {
                 return el.id == data.playerId;
             });
             var playername = '[' + player.name + '] ';
-            $('#messages').append('<h5>' + playername + escapeHtml(data.message) + '</h5>');
+            $('#messages').append('<h5>' + escapeHtml(playername) + escapeHtml(data.message) + '</h5>');
             speak(player.name + " said " + data.message, myPlayer);
             console.log(data);
             $messages.scrollTop($messages[0].scrollHeight);
@@ -85,7 +85,7 @@ $(document).ready(function () {
             myPlayerId = data.player.id;
             console.log('myPlayerId = ', myPlayerId);
 
-            var myPlayer = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128));
+            var myPlayer = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 22, 128, 128));
 
             myPlayer.name = name;
 
@@ -95,8 +95,22 @@ $(document).ready(function () {
 
             // add other players
             data.otherPlayers.forEach(function (player) {
-                players.push(new Player(player.id, player.name, new PhysObj(player.x, player.y, 20, 128, 128)));
+                var newPlayer = new Player(player.id, player.name, new PhysObj(player.x, player.y, 20, 128, 128));
+                for (var i = 0; i < player.weapons.length; i++) {
+                    var weaponObj = weapons[Object.keys(weapons).find(function (key) {
+                        return weapons[key].name == player.weapons[i];
+                    })];
+                    console.log(weaponObj);
+                    if (weaponObj) {
+                        newPlayer.weapons.push(weaponObj);
+                    }
+                }
+                //newPlayer.weapons.unshift(weapons.none);
+                console.log(player);
+                players.push(newPlayer);
             });
+
+            console.log(data.otherPlayers);
 
             data.messages.forEach(function (message) {
                 var playername = '[' + escapeHtml(message.sender) + '] ';
@@ -124,11 +138,9 @@ $(document).ready(function () {
             }
 
             if (!found) {
-                socket.emit('message sent', {
-                    message: 'Player ' + data.player.name + ' has joined',
-                    playerId: data.player.id
-                });
-                players.push(new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128)));
+                var player = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128));
+                console.log("uggg");
+                players.push(player);
             }
         });
 
@@ -139,6 +151,27 @@ $(document).ready(function () {
                     break;
                 }
             }
+        });
+
+        socket.on('player update weapon', function (data) {
+            var player = players.find(function (el) {
+                return el.id == data.playerId;
+            });
+
+            var weaponObj = weapons[Object.keys(weapons).find(function (key) {
+                return weapons[key].name == data.weaponName;
+            })];
+
+            if (weaponObj) {
+                player.weapons.push(weaponObj);
+            }
+            
+            console.log(player.weapons);
+            player.selectedWeapon++;
+
+            console.log(player.weapons);
+
+            itemEnts.splice(data.itemToRemove, 1);
         });
 
         socket.on('player shoots', function (data) {
@@ -234,24 +267,14 @@ $(document).ready(function () {
         var playerTorso = new Entity("img/player_def.png", 4);
         var playerLegs = new Entity("img/player_def.png", 4);
 
+        var box = new Entity("img/box.png", 0);
+        var boxPhys = new PhysObj(300, canvas.height-500, 20, 32, 32, false);
+        physicsObjects.push(boxPhys);
+
         var alien_blob = new Entity("img/alien_blob.png", 4);
 
         var platform = new Entity("img/platform.png", 1);
         var star11 = new Entity("img/star11.png", 1);
-
-        function loadImageSlice(entity, frameIncrement, splitWidth) {
-            if (frameIncrement === undefined) {
-                frameIncrement = 0.2;
-            }
-            if (splitWidth === undefined) {
-                splitWidth = 64;
-            }
-
-            var sl = splitWidth * entity.amtFrames / entity.amtFrames * (Math.floor(entity.frameNum) % entity.amtFrames);
-            entity.frameNum += frameIncrement;
-            entity.frameIndex = sl;
-            return sl;
-        }
 
         function fillScreen(color) {
             context.beginPath();
@@ -263,6 +286,8 @@ $(document).ready(function () {
         fillEnemys();
         fillStars();
         fillChunks(expectedSize);
+
+        newWeaponItem(weapons.autorpg, canvas);
 
         // setup a function to draw everything in your game.
 
@@ -315,17 +340,21 @@ $(document).ready(function () {
             context.fillStyle = "#fff";
 
             var currentPlayerX = canvas.width / 2 * canvRatio.x - cam.offsetX;
-
+            var y = players[0]._y;
+            var flipped = players[0].flipped;
+            
             fillText(players, 0, context, cam, canvRatio, "You (" + players[0].name + ")");
-            drawSprite(playerHead, currentPlayerX, players[0]._y, 64, 0, 128, 128);
-            drawSprite(playerTorso, currentPlayerX, players[0]._y, 64, 1, 128, 128);
+            drawPlayer(playerHead, currentPlayerX, y, 0);
+            drawPlayer(playerTorso, currentPlayerX, y, 1);
 
-            var weaponX = (((players[0]._x - cam.x) - cam.offsetX) * canvRatio.x) + cam.gunOffsetX;
-            var weaponY = ((players[0]._y + 50) * canvRatio.y) + cam.gunOffsetY;
+            var weaponX = (((players[0]._x - cam.x + weapon.camOffsetX) - cam.offsetX) * canvRatio.x) + cam.gunOffsetX;
+            var weaponY = ((players[0]._y + weapon.camOffsetY) * canvRatio.y) + cam.gunOffsetY;
 
-            context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
+            context.drawImage(weapon.image, weapon.frameIndex, 0, 64, 64, weaponX, weaponY, weapon.w * canvRatio.y, weapon.h * canvRatio.y);
 
-            drawSprite(playerLegs, currentPlayerX, players[0]._y, 64, 2, 128, 128);
+            drawPlayer(playerLegs, currentPlayerX, y, 2);
+
+            itemsCollision(players[0]);            
 
             updateBullet(players[0]);
 
@@ -335,20 +364,23 @@ $(document).ready(function () {
             }
 
             for (i = 1; i < players.length; i++) {
+                flipped = players[i].flipped;
+
                 fillText(players, i, context, cam, canvRatio);
 
                 weapon = players[i].weapons[players[i].selectedWeapon];
                 var offsetX = players[i]._x - cam.x - cam.offsetX;
+                y = players[i]._y;
 
-                drawSprite(playerHead, offsetX, players[i]._y, 64, 0, 128, 128);
-                drawSprite(playerTorso, offsetX, players[i]._y, 64, 1, 128, 128);
+                drawPlayer(playerHead, offsetX, y, 0);
+                drawPlayer(playerTorso, offsetX, y, 1);
 
-                weaponX = ((players[i]._x - cam.x - cam.offsetX) * canvRatio.x - canvRatio.y) + cam.gunOffsetX;
-                weaponY = ((players[i]._y + 50) * canvRatio.y) + cam.gunOffsetY;
+                weaponX = ((players[i]._x - cam.x - cam.offsetX + weapon.camOffsetX) * canvRatio.x - canvRatio.y) + cam.gunOffsetX;
+                weaponY = ((players[i]._y + weapon.camOffsetY) * canvRatio.y) + cam.gunOffsetY;
 
-                context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, 192 * canvRatio.y, 192 * canvRatio.y);
+                context.drawImage(weapon.image, 0, 0, 64, 64, weaponX, weaponY, weapon.w * canvRatio.y, weapon.h * canvRatio.y);
 
-                drawSprite(playerLegs, offsetX, players[i]._y, 64, 2, 128, 128);
+                drawPlayer(playerLegs, offsetX, y, 2);                
 
                 updateBullet(players[i]);
 
@@ -357,6 +389,11 @@ $(document).ready(function () {
                     drawSprite(bulletObj.image, bulletObj.ammoX, bulletObj.ammoY, 32, 0, 64, 64);
                 }
             }
+
+            drawItems();
+            drawObject(box, boxPhys, 32, 0);
+
+            entGravity(boxPhys, canvRatio);
 
             for (i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];

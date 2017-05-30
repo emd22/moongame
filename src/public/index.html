@@ -9,7 +9,7 @@
     <canvas id="main-canvas" width="500" height="250"></canvas>
 
     <div id="start-page">
-      Username:<input id="name-input">
+      Username:<input id="name-input" maxlength="15">
       <button id="enter-button">Join</button>
     </div>
     
@@ -22,7 +22,7 @@
         <h3>Chat</h3>
         <div id="messages">
         </div>
-        <input id="message-input">
+        <input id="message-input" maxlength="50">
       </div>
     </div>
     <script
@@ -32,7 +32,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://ethanmakescode.com'); //192.168.2.13:8080
+      var socket = io.connect('http://192.168.2.13:8080'); //192.168.2.13:8080
     </script>
 
     <script src="js/keypress.js"></script>

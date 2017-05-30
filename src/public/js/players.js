@@ -5,9 +5,10 @@ function Player(id, name, physObj) {
 
     this.powerups = [];
     this.bulletObjs = [];
-    this.weapons = [weapon_sg108];
+    this.weapons = [weapons.none];
     this.selectedWeapon = 0;
 
+    this.flipped = false;
     this._x = physObj.x;
     this._y = physObj.y;
     this.walkVelocity = 0;
