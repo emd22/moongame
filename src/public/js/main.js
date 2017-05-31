@@ -103,6 +103,7 @@ $(document).ready(function () {
                     console.log(weaponObj);
                     if (weaponObj) {
                         newPlayer.weapons.push(weaponObj);
+                        newPlayer.selectedWeapon = newPlayer.weapons.length-1;
                     }
                 }
                 //newPlayer.weapons.unshift(weapons.none);
@@ -139,7 +140,6 @@ $(document).ready(function () {
 
             if (!found) {
                 var player = new Player(data.player.id, data.player.name, new PhysObj(data.player.x, data.player.y, 20, 128, 128));
-                console.log("uggg");
                 players.push(player);
             }
         });
