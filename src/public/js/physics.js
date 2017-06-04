@@ -189,7 +189,7 @@ document.addEventListener('keydown', function (event) {
         else {
             if (myPlayer.jumpCooldown <= 0) {
                 myPlayer.jumpCooldown = 35;
-                myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 5.4, true);
+                myPlayer.setGravityVelocity(myPlayer.gravityVelocity - 5.0, true);
             }
         }
     }

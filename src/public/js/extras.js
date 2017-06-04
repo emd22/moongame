@@ -24,7 +24,7 @@ function fillText(players, i, context, cam, canvRatio, overrideText) {
 }
 
 var stars = [];
-var chunks = [];
+//var chunks = [];
 
 var enemys = [];
 
@@ -94,9 +94,9 @@ function drawPlayer(rEnt, x, y, level) {
     drawSprite(rEnt, x, y, 64, level, 128, 128);
 }
 
-function newWeaponItem(weapon, canvas) {
+function newWeaponItem(weapon, canvas, x) {
     var weaponEnt = new Entity(weapon.image.src, 0, 0);
-    var weaponPhys = new PhysObj(500, canvas.height - 140, 20, 128, 128, false);
+    var weaponPhys = new PhysObj(x, canvas.height - 140, 20, 128, 128, false);
 
     itemEnts.push([weaponEnt, weaponPhys, weapon]);
 }
@@ -124,10 +124,12 @@ function itemsCollision(player) {
             player.weapons.push(cur[2]);
             player.selectedWeapon++;
 
-            socket.emit('player update weapon', {
+            socket.emit('player new weapon', {
                 weaponName: cur[2].name,
                 itemToRemove: i,
             });
+
+            cur[2].itemToRemove = i;
 
             itemEnts.splice(i, 1);
         }

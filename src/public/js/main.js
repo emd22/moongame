@@ -89,8 +89,6 @@ $(document).ready(function () {
 
             myPlayer.name = name;
 
-            console.log(speechSynthesis.getVoices());
-
             players.push(myPlayer);
 
             // add other players
@@ -100,18 +98,15 @@ $(document).ready(function () {
                     var weaponObj = weapons[Object.keys(weapons).find(function (key) {
                         return weapons[key].name == player.weapons[i];
                     })];
-                    console.log(weaponObj);
                     if (weaponObj) {
                         newPlayer.weapons.push(weaponObj);
-                        newPlayer.selectedWeapon = newPlayer.weapons.length-1;
+                        var weplen = newPlayer.weapons.length;
+                        newPlayer.selectedWeapon = weplen-1;
                     }
                 }
                 //newPlayer.weapons.unshift(weapons.none);
-                console.log(player);
                 players.push(newPlayer);
             });
-
-            console.log(data.otherPlayers);
 
             data.messages.forEach(function (message) {
                 var playername = '[' + escapeHtml(message.sender) + '] ';
@@ -124,7 +119,7 @@ $(document).ready(function () {
                     y: myPlayer._y
                 });
             }, 500);
-
+            players.pop();
             afterJoined();
         });
 
@@ -153,7 +148,7 @@ $(document).ready(function () {
             }
         });
 
-        socket.on('player update weapon', function (data) {
+        socket.on('player new weapon', function (data) {
             var player = players.find(function (el) {
                 return el.id == data.playerId;
             });
@@ -285,9 +280,21 @@ $(document).ready(function () {
 
         fillEnemys();
         fillStars();
-        fillChunks(expectedSize);
+        //fillChunks(expectedSize);
 
-        newWeaponItem(weapons.autorpg, canvas);
+        newWeaponItem(weapons.autorpg, canvas, 300);
+        newWeaponItem(weapons.sg812, canvas, 500);
+
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            var weapon = player.weapons[player.selectedWeapon];
+            if (weapon.itemToRemove != -1) {
+                itemEnts.splice(weapon.itemToRemove, 1);
+            }
+            else {
+                console.log("player "+players[i].name+"'s "+weapon.name+" removal index is -1.");
+            }
+        }
 
         // setup a function to draw everything in your game.
 
@@ -397,7 +404,7 @@ $(document).ready(function () {
 
             for (i = 0; i < chunks.length; i++) {
                 var chunk = chunks[i];
-                context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, (chunk.x - cam.x - cam.offsetX) * canvRatio.x, chunk.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
+                context.drawImage(platform.image, platform.frameIndex, 0, 64, 10, (chunk.x - cam.x - cam.offsetX) * canvRatio.x, chunk.phys.y * canvRatio.y, 128 * canvRatio.x, 16 * canvRatio.y);
             }
 
             // for (var i = 0; i < enemys.length; i++) {

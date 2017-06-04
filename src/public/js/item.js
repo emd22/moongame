@@ -63,6 +63,8 @@ function Weapon(weaponProps, newAmmo, name, imageSrc, ammo, camOffsetX, camOffse
     this.frameNum = 0;
     this.frameIndex = 0;
 
+    this.itemToRemove = -1;
+
     this.w = w;
     this.h = h;
 
@@ -130,7 +132,6 @@ function shootWeapon(player) {
 
         var bullet = new Ammo(newAmmoImg, currentWeapon.newAmmo.range, bulletX, bulletY);
 
-        console.log(player.name, "shot");
         player.bulletObjs.push(bullet);
         
         currentWeapon.shootCooldown = currentWeapon.weaponProps.cooldown;    

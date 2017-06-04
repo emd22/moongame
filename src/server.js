@@ -5,6 +5,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var mongoose = require('mongoose');
 var Message = require('./models/message.js').Message;
+var loadChunk = require('./parsechunk.js');
 
 mongoose.connect('mongodb://localhost/moongame');
 
@@ -24,6 +25,17 @@ app.get('/about', function (req, res) {
 
 app.get('/game', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
+});
+
+app.get('/api/chunk/:x([0-9]+)/:y([0-9]+)', function (req, res) {
+  loadChunk(path.join(__dirname, "maps/chunk_"+req.params.x+"-"+req.params.y+".png"), function (objects) {
+    if (objects === null) {
+      res.send(404);
+    }
+    else {
+      res.json(objects);
+    }
+  });
 });
 
 function PlayerInfo(id, name, x, y, walkVelocity, gravityVelocity, weapons) {
@@ -65,8 +77,6 @@ io.on('connection', function (socket) {
 
       currentUsers.push(socket.player);
 
-      console.log(currentUsers);
-
       socket.on('disconnect', function () {
         console.log("player "+socket.player+" has disconnected");
 
@@ -103,10 +113,10 @@ io.on('connection', function (socket) {
         });
       });
 
-      socket.on('player update weapon', function (data) {
+      socket.on('player new weapon', function (data) {
         socket.player.weapons.push(data.weaponName);
 
-        socket.broadcast.emit('player update weapon', {
+        socket.broadcast.emit('player new weapon', {
           playerId: socket.player.id,
           weaponName: data.weaponName,
           itemToRemove: data.itemToRemove,

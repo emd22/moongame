@@ -22,7 +22,7 @@
         <h3>Chat</h3>
         <div id="messages">
         </div>
-        <input id="message-input" maxlength="50">
+        <textarea rows="2" cols="23" id="message-input" maxlength="100"></textarea>
       </div>
     </div>
     <script
@@ -32,7 +32,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://ethanmakescode.com'); //192.168.2.13:8080
+      var socket = io.connect('http://192.168.2.13:8080'); //192.168.2.13:8080
     </script>
 
     <script src="js/keypress.js"></script>
@@ -41,6 +41,7 @@
     <script src="js/item.js"></script>
     <script src="js/mobile.js"></script>
     <script src="js/players.js"></script>
+    <script src="js/map.js"></script>    
     <script src="js/physics.js"></script>
     <script src="js/main.js"></script>
   </body>
